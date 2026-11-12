@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="{{ site.lingua }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if titolo %}{{ titolo }} | {{ site.nome }}{% else %}{{ site.nome }} – {{ site.slogan }}{% endif %}</title>
+  <meta name="description" content="{{ descrizione or site.descrizione }}">
+  <meta name="theme-color" content="#101010">
+  <meta property="og:site_name" content="{{ site.nome }}">
+  <meta property="og:locale" content="it_IT">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="{{ titolo or site.nome }}">
+  <meta property="og:description" content="{{ descrizione or site.descrizione }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | url }}">
+</head>
+<body>
+  <a class="skip" href="#contenuto">Vai al contenuto</a>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="{{ '/' | url }}" aria-label="TECHPULSE AI – Home">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="2 12 7 12 10 4 14 20 17 12 22 12"/></svg>
+        <span>TECHPULSE <b>AI</b></span>
+      </a>
+
+      <input type="checkbox" id="menu-toggle" class="menu-toggle" aria-label="Apri o chiudi il menu">
+      <label for="menu-toggle" class="menu-button" aria-hidden="true"><span></span><span></span><span></span></label>
+
+      <nav class="nav" aria-label="Navigazione principale">
+        <a href="{{ '/' | url }}">Home</a>
+        <a href="{{ '/ultime-notizie/' | url }}">Ultime notizie</a>
+        {% for c in categorie %}
+        <a href="{{ ('/' ~ c.slug ~ '/') | url }}">{{ c.nome }}</a>
+        {% endfor %}
+      </nav>
+    </div>
+  </header>
+
+  <main id="contenuto">
+    {{ content | safe }}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h4>TECHPULSE <span style="color:var(--verde)">AI</span></h4>
+          <p>{{ site.descrizione }}</p>
+        </div>
+        <div>
+          <h4>Sezioni</h4>
+          <ul>
+            <li><a href="{{ '/ultime-notizie/' | url }}">Ultime notizie</a></li>
+            {% for c in categorie %}
+            <li><a href="{{ ('/' ~ c.slug ~ '/') | url }}">{{ c.nome }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+        <div>
+          <h4>Informazioni</h4>
+          <ul>
+            <li><a href="{{ '/chi-siamo/' | url }}">Chi siamo</a></li>
+            <li><a href="{{ '/contatti/' | url }}">Contatti</a></li>
+            <li><a href="{{ '/privacy-policy/' | url }}">Privacy Policy</a></li>
+            <li><a href="{{ '/cookie-policy/' | url }}">Cookie Policy</a></li>
+            <li><a href="{{ '/termini-e-condizioni/' | url }}">Termini e condizioni</a></li>
+            <li><a href="{{ '/informativa-ai/' | url }}">Uso dell'intelligenza artificiale</a></li>
+          </ul>
+        </div>
+      </div>
+      <p class="footer-note">
+        Gli articoli sono redatti con l'ausilio dell'intelligenza artificiale e
+        approvati prima della pubblicazione. Le fonti sono sempre indicate.
+        Marchi e loghi citati appartengono ai rispettivi proprietari.
+      </p>
+    </div>
+  </footer>
+</body>
+</html>
