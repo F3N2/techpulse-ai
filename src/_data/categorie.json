@@ -1,0 +1,27 @@
+[
+  {
+    "slug": "intelligenza-artificiale",
+    "nome": "Intelligenza artificiale",
+    "descrizione": "Modelli, strumenti e applicazioni dell'AI."
+  },
+  {
+    "slug": "tecnologia",
+    "nome": "Tecnologia",
+    "descrizione": "Software, hardware e novità dal mondo tech."
+  },
+  {
+    "slug": "startup",
+    "nome": "Startup",
+    "descrizione": "Nuove aziende, round di investimento e idee."
+  },
+  {
+    "slug": "innovazione",
+    "nome": "Innovazione",
+    "descrizione": "Scienza, ricerca e futuro digitale."
+  },
+  {
+    "slug": "robotica",
+    "nome": "Robotica",
+    "descrizione": "Robot, automazione e macchine intelligenti."
+  }
+]
