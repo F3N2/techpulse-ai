@@ -1,18 +1,15 @@
 ---
 layout: base.njk
 ---
-<article class="articolo container fade-in">
+<article class="articolo container">
 
   <header class="articolo-testata">
-    <p class="articolo-categoria">
-      <span class="badge">{{ categoria }}</span>
-    </p>
+    <p class="kicker articolo-categoria">{{ categoria }}</p>
     <h1 class="articolo-titolo">{{ titolo }}</h1>
     {% if sottotitolo %}
     <p class="articolo-sottotitolo">{{ sottotitolo }}</p>
     {% endif %}
     <p class="meta">
-      Pubblicato il
       <time datetime="{{ page.date | dataIso }}">{{ page.date | dataIt }}</time>
     </p>
   </header>
@@ -54,7 +51,7 @@ layout: base.njk
   </aside>
 
   <p class="articolo-indietro">
-    <a class="btn" href="{{ '/ultime-notizie/' | url }}">← Torna alle ultime notizie</a>
+    <a class="btn" href="{{ '/ultime-notizie/' | url }}">← Ultime notizie</a>
   </p>
 
 </article>
