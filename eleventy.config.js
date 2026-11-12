@@ -6,6 +6,11 @@ import markdownIt from "markdown-it";
 const ID_VALIDO = /^tp-\d{8}-[a-f0-9]{6}$/;
 const CARTELLA_ARTICOLI = "src/articoli";
 
+// Unico file NON .md ammesso in src/articoli/ (impostazioni comuni)
+const FILE_DATI_AMMESSO = "articoli.json";
+const CHIAVI_DATI_AMMESSE = ["layout"];
+const LAYOUT_ARTICOLO = "articolo.njk";
+
 // Legge il front matter (la parte tra i due "---" in cima al file).
 // Restituisce null se manca. Per "approvato" conserva il testo grezzo,
 // così "true" tra virgolette NON viene accettato.
@@ -35,6 +40,35 @@ function leggiFrontMatter(testo) {
   return { dati, grezzi };
 }
 
+// Controlla il file di impostazioni comuni: deve contenere SOLO "layout"
+// con il valore previsto. Nessun altro dato può passare da qui.
+function controllaFileDati(file, errori) {
+  let json;
+  try {
+    json = JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, ""));
+  } catch (e) {
+    errori.push(`${file}: JSON non valido`);
+    return;
+  }
+
+  if (json === null || typeof json !== "object" || Array.isArray(json)) {
+    errori.push(`${file}: deve contenere un oggetto JSON { ... }`);
+    return;
+  }
+
+  for (const chiave of Object.keys(json)) {
+    if (!CHIAVI_DATI_AMMESSE.includes(chiave)) {
+      errori.push(
+        `${file}: chiave non ammessa "${chiave}" (ammesse: ${CHIAVI_DATI_AMMESSE.join(", ")})`
+      );
+    }
+  }
+
+  if (json.layout !== LAYOUT_ARTICOLO) {
+    errori.push(`${file}: "layout" deve essere "${LAYOUT_ARTICOLO}"`);
+  }
+}
+
 // CONTROLLO ESPLICITO: parte a ogni build, indipendentemente dalle collezioni.
 // Se trova anche un solo problema, la build si interrompe.
 function controllaArticoli() {
@@ -47,6 +81,12 @@ function controllaArticoli() {
     const file = path.join(CARTELLA_ARTICOLI, nome);
     if (!fs.statSync(file).isFile()) continue;
     if (nome === ".gitkeep") continue;
+
+    // Unico file di dati ammesso: controllato a parte
+    if (nome === FILE_DATI_AMMESSO) {
+      controllaFileDati(file, errori);
+      continue;
+    }
 
     if (!nome.endsWith(".md")) {
       errori.push(`${file}: file non ammesso (sono permessi solo file .md)`);
