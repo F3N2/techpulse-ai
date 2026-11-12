@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% if titolo %}{{ titolo }} | {{ site.nome }}{% else %}{{ site.nome }} – {{ site.slogan }}{% endif %}</title>
+  <title>{{ site.nome }}</title>
   <meta name="description" content="{{ descrizione or site.descrizione }}">
   <meta name="theme-color" content="#101010">
+  <link rel="icon" type="image/svg+xml" href="{{ '/assets/favicon.svg' | url }}">
   <meta property="og:site_name" content="{{ site.nome }}">
   <meta property="og:locale" content="it_IT">
   <meta property="og:type" content="website">
@@ -44,7 +45,7 @@
     <div class="container">
       <div class="footer-grid">
         <div>
-          <h4>TECHPULSE <span style="color:var(--verde)">AI</span></h4>
+          <h4>TECHPULSE AI</h4>
           <p>{{ site.descrizione }}</p>
         </div>
         <div>
