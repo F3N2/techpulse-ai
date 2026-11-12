@@ -1,0 +1,40 @@
+---
+layout: base.njk
+pagination:
+  data: categorie
+  size: 1
+  alias: cat
+permalink: "/{{ cat.slug }}/"
+eleventyComputed:
+  titolo: "{{ cat.nome }}"
+  descrizione: "{{ cat.descrizione }} Gli articoli di TECHPULSE AI nella sezione {{ cat.nome }}."
+---
+{% set articoliCat = collections.articoli | perCategoria(cat.nome) %}
+
+<section class="hero container fade-in">
+  <h1>{{ cat.nome }}</h1>
+  <p>{{ cat.descrizione }}</p>
+</section>
+
+<section class="container">
+  {% if articoliCat.length %}
+  <div class="grid">
+    {% for articolo in articoliCat %}
+      {% include "card-articolo.njk" %}
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="card stato-vuoto fade-in">
+    <h2>Nessun articolo in questa sezione</h2>
+    <p>
+      Non abbiamo ancora pubblicato articoli su questo tema. Ogni articolo
+      viene pubblicato solo dopo una verifica e un'approvazione della redazione.
+    </p>
+    <p>
+      <a class="btn" href="{{ '/ultime-notizie/' | url }}">
+        Vai alle ultime notizie
+      </a>
+    </p>
+  </div>
+  {% endif %}
+</section>
