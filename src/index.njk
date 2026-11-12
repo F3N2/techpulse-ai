@@ -1,0 +1,20 @@
+---
+layout: base.njk
+---
+<section class="hero container fade-in">
+  <h1>Il futuro digitale, <em>spiegato bene</em>.</h1>
+  <p>{{ site.descrizione }}</p>
+  <p><strong>Sito in costruzione.</strong></p>
+</section>
+
+<section class="container">
+  <h2 class="section-title">Categorie</h2>
+  <div class="grid">
+    {% for c in categorie %}
+    <article class="card fade-in">
+      <span class="badge">{{ c.nome }}</span>
+      <p>{{ c.descrizione }}</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
