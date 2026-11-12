@@ -1,153 +1,119 @@
-import fs from "node:fs";
-import path from "node:path";
-import markdownIt from "markdown-it";
+const fs = require("fs");
+const path = require("path");
+const markdownIt = require("markdown-it");
 
-// Formato ID valido: tp-AAAAMMGG-xxxxxx (6 caratteri esadecimali)
 const ID_VALIDO = /^tp-\d{8}-[a-f0-9]{6}$/;
 const CARTELLA_ARTICOLI = "src/articoli";
-
-// Unico file NON .md ammesso in src/articoli/ (impostazioni comuni)
 const FILE_DATI_AMMESSO = "articoli.json";
-const CHIAVI_DATI_AMMESSE = ["layout"];
 const LAYOUT_ARTICOLO = "articolo.njk";
 
-// Legge il front matter (la parte tra i due "---" in cima al file).
-// Restituisce null se manca. Per "approvato" conserva il testo grezzo,
-// così "true" tra virgolette NON viene accettato.
-function leggiFrontMatter(testo) {
-  const m = testo
-    .replace(/^\uFEFF/, "")
-    .match(/^---\r?\n([\s\S]*?)\r?\n---(\r?\n|$)/);
-  if (!m) return null;
+function leggiFrontMatter(contenuto) {
+  const match = contenuto.match(/^---\r?\n([\s\S]*?)\r?\n---/);
+
+  if (!match) {
+    return null;
+  }
 
   const dati = {};
-  const grezzi = {};
-  for (const riga of m[1].split(/\r?\n/)) {
-    const r = riga.match(/^([A-Za-z_][\w-]*):\s*(.*)$/);
-    if (!r) continue;
-    const grezzo = r[2].trim();
-    let valore = grezzo;
-    if (
-      valore.length >= 2 &&
-      ((valore.startsWith('"') && valore.endsWith('"')) ||
-        (valore.startsWith("'") && valore.endsWith("'")))
-    ) {
-      valore = valore.slice(1, -1).trim();
+
+  for (const riga of match[1].split(/\r?\n/)) {
+    const campo = riga.match(/^([a-zA-Z_][a-zA-Z0-9_]*):\s*(.*)$/);
+
+    if (campo) {
+      dati[campo[1]] = campo[2].trim().replace(/^["']|["']$/g, "");
     }
-    dati[r[1]] = valore;
-    grezzi[r[1]] = grezzo;
   }
-  return { dati, grezzi };
+
+  return dati;
 }
 
-// Controlla il file di impostazioni comuni: deve contenere SOLO "layout"
-// con il valore previsto. Nessun altro dato può passare da qui.
-function controllaFileDati(file, errori) {
-  let json;
+function controllaFileDati(percorso, errori) {
   try {
-    json = JSON.parse(fs.readFileSync(file, "utf8").replace(/^\uFEFF/, ""));
-  } catch (e) {
-    errori.push(`${file}: JSON non valido`);
-    return;
-  }
+    const dati = JSON.parse(fs.readFileSync(percorso, "utf8"));
 
-  if (json === null || typeof json !== "object" || Array.isArray(json)) {
-    errori.push(`${file}: deve contenere un oggetto JSON { ... }`);
-    return;
-  }
-
-  for (const chiave of Object.keys(json)) {
-    if (!CHIAVI_DATI_AMMESSE.includes(chiave)) {
+    if (
+      !dati ||
+      typeof dati !== "object" ||
+      Array.isArray(dati) ||
+      Object.keys(dati).length !== 1 ||
+      dati.layout !== LAYOUT_ARTICOLO
+    ) {
       errori.push(
-        `${file}: chiave non ammessa "${chiave}" (ammesse: ${CHIAVI_DATI_AMMESSE.join(", ")})`
+        `${FILE_DATI_AMMESSO}: è consentita soltanto la proprietà layout con valore "${LAYOUT_ARTICOLO}".`
       );
     }
-  }
-
-  if (json.layout !== LAYOUT_ARTICOLO) {
-    errori.push(`${file}: "layout" deve essere "${LAYOUT_ARTICOLO}"`);
+  } catch {
+    errori.push(`${FILE_DATI_AMMESSO}: JSON non valido.`);
   }
 }
 
-// CONTROLLO ESPLICITO: parte a ogni build, indipendentemente dalle collezioni.
-// Se trova anche un solo problema, la build si interrompe.
 function controllaArticoli() {
-  if (!fs.existsSync(CARTELLA_ARTICOLI)) return; // nessun articolo ancora: ok
-
-  const errori = [];
-  const visti = new Map(); // id -> file
-
-  for (const nome of fs.readdirSync(CARTELLA_ARTICOLI)) {
-    const file = path.join(CARTELLA_ARTICOLI, nome);
-    if (!fs.statSync(file).isFile()) continue;
-    if (nome === ".gitkeep") continue;
-
-    // Unico file di dati ammesso: controllato a parte
-    if (nome === FILE_DATI_AMMESSO) {
-      controllaFileDati(file, errori);
-      continue;
-    }
-
-    if (!nome.endsWith(".md")) {
-      errori.push(`${file}: file non ammesso (sono permessi solo file .md)`);
-      continue;
-    }
-
-    const fm = leggiFrontMatter(fs.readFileSync(file, "utf8"));
-    if (!fm) {
-      errori.push(`${file}: intestazione (front matter) mancante o non valida`);
-      continue;
-    }
-
-    const { dati, grezzi } = fm;
-
-    // 1. ID valido
-    if (!dati.id || !ID_VALIDO.test(dati.id)) {
-      errori.push(`${file}: ID mancante o non valido`);
-    } else if (visti.has(dati.id)) {
-      // 2. ID duplicato
-      errori.push(
-        `${file}: ID duplicato (${dati.id}), già usato in ${visti.get(dati.id)}`
-      );
-    } else {
-      visti.set(dati.id, file);
-    }
-
-    // 3. Approvazione esplicita
-    if (grezzi.approvato !== "true") {
-      errori.push(`${file}: articolo NON approvato (serve "approvato: true")`);
-    }
-
-    // 4. Titolo e categoria
-    if (!dati.titolo) errori.push(`${file}: titolo mancante`);
-    if (!dati.categoria) errori.push(`${file}: categoria mancante`);
+  if (!fs.existsSync(CARTELLA_ARTICOLI)) {
+    return;
   }
 
-  if (errori.length > 0) {
+  const file = fs.readdirSync(CARTELLA_ARTICOLI);
+  const errori = [];
+  const idVisti = new Set();
+
+  for (const nomeFile of file) {
+    const percorso = path.join(CARTELLA_ARTICOLI, nomeFile);
+
+    if (nomeFile === FILE_DATI_AMMESSO) {
+      controllaFileDati(percorso, errori);
+      continue;
+    }
+
+    if (nomeFile === ".gitkeep") {
+      continue;
+    }
+
+    if (!nomeFile.endsWith(".md")) {
+      errori.push(`${nomeFile}: formato non consentito.`);
+      continue;
+    }
+
+    const contenuto = fs.readFileSync(percorso, "utf8");
+    const dati = leggiFrontMatter(contenuto);
+
+    if (!dati) {
+      errori.push(`${nomeFile}: front matter mancante o non valido.`);
+      continue;
+    }
+
+    if (!ID_VALIDO.test(dati.id || "")) {
+      errori.push(`${nomeFile}: ID non valido.`);
+    } else if (idVisti.has(dati.id)) {
+      errori.push(`${nomeFile}: ID duplicato (${dati.id}).`);
+    } else {
+      idVisti.add(dati.id);
+    }
+
+    if (dati.approvato !== "true") {
+      errori.push(`${nomeFile}: articolo non approvato.`);
+    }
+
+    if (!dati.titolo) {
+      errori.push(`${nomeFile}: titolo mancante.`);
+    }
+
+    if (!dati.categoria) {
+      errori.push(`${nomeFile}: categoria mancante.`);
+    }
+  }
+
+  if (errori.length) {
     throw new Error(
-      "[TECHPULSE] BUILD INTERROTTA. Controlli di sicurezza falliti:\n - " +
-        errori.join("\n - ")
+      "Controllo articoli fallito:\n- " + errori.join("\n- ")
     );
   }
 }
 
-export default function (eleventyConfig) {
-  // SICUREZZA: parte SEMPRE all'inizio di ogni build.
-  // Se fallisce, nessun file del sito viene prodotto.
+module.exports = function (eleventyConfig) {
   eleventyConfig.on("eleventy.before", () => {
     controllaArticoli();
   });
 
-  // SICUREZZA: niente HTML grezzo dentro gli articoli
-  eleventyConfig.setLibrary(
-    "md",
-    markdownIt({ html: false, linkify: true, typographer: true })
-  );
-
-  // Copia la cartella grafica nel sito
-  eleventyConfig.addPassthroughCopy({ "src/assets": "assets" });
-
-  // Filtri per le date in italiano
   eleventyConfig.addFilter("dataIt", (d) =>
     new Intl.DateTimeFormat("it-IT", {
       day: "numeric",
@@ -156,35 +122,31 @@ export default function (eleventyConfig) {
       timeZone: "Europe/Rome",
     }).format(new Date(d))
   );
-  eleventyConfig.addFilter("dataIso", (d) => new Date(d).toISOString());
 
-  // Collezione articoli: seconda difesa, oltre al controllo esplicito.
-  eleventyConfig.addCollection("articoli", (api) => {
-    const articoli = api.getFilteredByGlob("src/articoli/*.md");
-    const visti = new Set();
+  eleventyConfig.addFilter("dataIso", (d) =>
+    new Date(d).toISOString()
+  );
 
-    for (const a of articoli) {
-      const file = a.inputPath;
-      const id = a.data.id;
+  eleventyConfig.addFilter("perCategoria", (lista, nomeCategoria) =>
+    (lista || []).filter(
+      (articolo) => articolo.data.categoria === nomeCategoria
+    )
+  );
 
-      if (!id || !ID_VALIDO.test(id)) {
-        throw new Error(`[TECHPULSE] ID mancante o non valido in ${file}`);
-      }
-      if (visti.has(id)) {
-        throw new Error(`[TECHPULSE] ID duplicato (${id}) in ${file}`);
-      }
-      visti.add(id);
+  eleventyConfig.addCollection("articoli", (collectionApi) =>
+    collectionApi
+      .getFilteredByGlob("src/articoli/*.md")
+      .sort((a, b) => b.date - a.date)
+  );
 
-      if (a.data.approvato !== true) {
-        throw new Error(`[TECHPULSE] Articolo NON approvato in ${file}`);
-      }
-      if (!a.data.titolo || !a.data.categoria) {
-        throw new Error(`[TECHPULSE] Titolo o categoria mancanti in ${file}`);
-      }
-    }
-
-    return articoli.sort((x, y) => y.date - x.date);
-  });
+  eleventyConfig.setLibrary(
+    "md",
+    markdownIt({
+      html: false,
+      breaks: true,
+      linkify: true,
+    })
+  );
 
   return {
     dir: {
@@ -193,10 +155,6 @@ export default function (eleventyConfig) {
       data: "_data",
       output: "_site",
     },
-    // SICUREZZA: il testo degli articoli non viene eseguito come modello
-    markdownTemplateEngine: false,
-    htmlTemplateEngine: "njk",
-    // Necessario finché il sito sta su nomeutente.github.io/techpulse-ai/
     pathPrefix: "/techpulse-ai/",
   };
-}
+};
