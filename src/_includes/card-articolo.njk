@@ -1,5 +1,5 @@
-<article class="card fade-in">
-  <span class="badge">{{ articolo.data.categoria }}</span>
+<article class="card">
+  <p class="kicker">{{ articolo.data.categoria }}</p>
   <h3><a href="{{ articolo.url | url }}">{{ articolo.data.titolo }}</a></h3>
   {% if articolo.data.sottotitolo %}
   <p>{{ articolo.data.sottotitolo }}</p>
