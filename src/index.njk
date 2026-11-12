@@ -4,46 +4,49 @@ layout: base.njk
 {% set tutti = collections.articoli %}
 {% set inEvidenza = tutti | first %}
 
-<section class="hero container fade-in">
-  <h1>Il futuro digitale, <em>spiegato bene</em>.</h1>
-  <p>{{ site.descrizione }}</p>
-  <p>
-    <a class="btn" href="{{ '/ultime-notizie/' | url }}">Leggi le ultime notizie</a>
-  </p>
-</section>
-
 {% if tutti.length %}
 
-<section class="container" aria-labelledby="titolo-evidenza">
-  <h2 class="section-title" id="titolo-evidenza">In evidenza</h2>
-  <article class="card card-evidenza fade-in">
-    <span class="badge">{{ inEvidenza.data.categoria }}</span>
-    <h3><a href="{{ inEvidenza.url | url }}">{{ inEvidenza.data.titolo }}</a></h3>
-    {% if inEvidenza.data.sottotitolo %}
-    <p>{{ inEvidenza.data.sottotitolo }}</p>
-    {% endif %}
-    <p class="meta">
-      <time datetime="{{ inEvidenza.date | dataIso }}">{{ inEvidenza.date | dataIt }}</time>
-    </p>
-  </article>
-</section>
-
-<section class="container" aria-labelledby="titolo-ultime">
-  <h2 class="section-title" id="titolo-ultime">Ultime notizie</h2>
-  <div class="grid">
-    {% for articolo in tutti %}
-      {% if loop.index > 1 and loop.index <= 7 %}
-        {% include "card-articolo.njk" %}
+<section class="container" aria-label="Notizie principali">
+  <div class="home-grid" style="margin-top:1.5rem">
+    <article class="lead">
+      <p class="kicker">{{ inEvidenza.data.categoria }}</p>
+      <h2><a href="{{ inEvidenza.url | url }}">{{ inEvidenza.data.titolo }}</a></h2>
+      {% if inEvidenza.data.sottotitolo %}
+      <p>{{ inEvidenza.data.sottotitolo }}</p>
       {% endif %}
-    {% endfor %}
+      <p class="meta">
+        <time datetime="{{ inEvidenza.date | dataIso }}">{{ inEvidenza.date | dataIt }}</time>
+      </p>
+    </article>
+
+    <aside aria-label="Ultime notizie">
+      <h2 class="section-head" style="margin-top:0">Ultime notizie</h2>
+      <ul class="lista">
+        {% for articolo in tutti %}
+          {% if loop.index > 1 and loop.index <= 7 %}
+        <li>
+          <p class="kicker">{{ articolo.data.categoria }}</p>
+          <a href="{{ articolo.url | url }}">{{ articolo.data.titolo }}</a>
+          <p class="meta">
+            <time datetime="{{ articolo.date | dataIso }}">{{ articolo.date | dataIt }}</time>
+          </p>
+        </li>
+          {% endif %}
+        {% endfor %}
+      </ul>
+      <p><a href="{{ '/ultime-notizie/' | url }}">Tutte le notizie →</a></p>
+    </aside>
   </div>
-  <p><a class="btn" href="{{ '/ultime-notizie/' | url }}">Tutte le notizie</a></p>
 </section>
 
 {% else %}
 
 <section class="container">
-  <div class="card stato-vuoto fade-in">
+  <div class="page-head">
+    <h1>TECHPULSE AI</h1>
+    <p>Il magazine italiano su intelligenza artificiale, tecnologia, startup, innovazione e robotica.</p>
+  </div>
+  <div class="stato-vuoto">
     <h2>Nessun articolo pubblicato</h2>
     <p>
       Stiamo preparando i primi contenuti. Ogni articolo viene pubblicato
@@ -54,25 +57,11 @@ layout: base.njk
 
 {% endif %}
 
-<section class="container" aria-labelledby="titolo-categorie">
-  <h2 class="section-title" id="titolo-categorie">Categorie</h2>
-  <div class="grid">
-    {% for c in categorie %}
-    <article class="card fade-in">
-      <span class="badge">{{ c.nome }}</span>
-      <p>{{ c.descrizione }}</p>
-      <p><a href="{{ ('/' ~ c.slug ~ '/') | url }}">Vai alla sezione →</a></p>
-    </article>
-    {% endfor %}
-  </div>
-</section>
-
 {% for c in categorie %}
-  {% if c.slug != "tecnologia" %}
-    {% set articoliCat = tutti | perCategoria(c.nome) %}
-    {% if articoliCat.length %}
+  {% set articoliCat = tutti | perCategoria(c.nome) %}
+  {% if articoliCat.length %}
 <section class="container" aria-labelledby="sezione-{{ c.slug }}">
-  <h2 class="section-title" id="sezione-{{ c.slug }}">{{ c.nome }}</h2>
+  <h2 class="section-head" id="sezione-{{ c.slug }}">{{ c.nome }}</h2>
   <div class="grid">
     {% for articolo in articoliCat %}
       {% if loop.index <= 3 %}
@@ -82,6 +71,5 @@ layout: base.njk
   </div>
   <p><a href="{{ ('/' ~ c.slug ~ '/') | url }}">Tutti gli articoli: {{ c.nome }} →</a></p>
 </section>
-    {% endif %}
   {% endif %}
 {% endfor %}
