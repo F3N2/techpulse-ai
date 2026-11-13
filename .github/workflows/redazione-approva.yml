@@ -66,7 +66,7 @@ jobs:
         run: |
           git config user.name "NEXORA - redazione"
           git config user.email "redazione@users.noreply.github.com"
-          git add _redazione src/articoli
+          git add _redazione src/articoli src/assets/copertine
           if git diff --cached --quiet; then
             echo "Nessuna modifica da salvare."
             exit 0

@@ -191,6 +191,10 @@ sottotitolo: "Una riga che spiega perché conta"
 categoria: "Intelligenza artificiale"
 date: 2026-11-13T09:00:00+01:00
 approvato: true
+copertina:
+  file: "/assets/copertine/tp-20261113-a1b2c3.png"
+  forma: "onde"
+  seme: "tp-20261113-a1b2c3"
 punti_chiave:
   - "Il fatto principale in una riga."
   - "Un secondo dato che aiuta a capire."
@@ -210,6 +214,22 @@ stessa categoria e i link all'articolo precedente e successivo.
 
 I controlli automatici in `eleventy.config.js` bloccano ID non validi o duplicati,
 articoli con `approvato` diverso da `true`, titoli mancanti e categorie mancanti.
+
+## Copertine
+
+Ogni bozza riceve una copertina automatica appena viene creata, in
+`_redazione/copertine/<id>.png`. Non sono fotografie né immagini prodotte da modelli
+visuali: sono curve di livello disegnate dal sito (`scripts/lib/copertine.js`), con quattro
+forme — onde, cresta, nodo, picco — scelte dall'ID dell'articolo. La copertina parte con la
+bozza su Telegram: sotto la foto ci sono ✅ Pubblica, 🔄 Nuova copertina e ❌ Scarta.
+
+- **approvando**, il PNG passa in `src/assets/copertine/<id>.png` e l'articolo lo mostra;
+- **rigenerando**, cambia il seme e la copertina viene riscritta (la forma resta);
+- **scartando**, il PNG viene eliminato insieme alla bozza.
+
+Le copertine delle bozze restano in `_redazione/`, fuori dal sito, e non finiscono in
+`_site` finché non sono approvate. Per un articolo scritto a mano puoi aggiungere il blocco
+`copertina` nel front matter; senza di lui il sito disegna l'SVG di riserva.
 
 ## Zona tool
 

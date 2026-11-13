@@ -9,11 +9,18 @@ const {
   PERCORSI,
   urlArticolo,
 } = require("./lib/config");
-const { promuoviBozza, scartaBozza } = require("./lib/articoli");
+const {
+  promuoviBozza,
+  scartaBozza,
+  rigeneraCopertina,
+  percorsoCopertinaBozza,
+} = require("./lib/articoli");
 const {
   leggiAggiornamenti,
   rispondiCallback,
   modificaMessaggio,
+  modificaFoto,
+  messaggioBozza,
   inviaMessaggio,
   eliminaMessaggio,
 } = require("./lib/telegram");
@@ -572,6 +579,29 @@ async function gestisciCallback(callback, chatId, archivio, stato) {
           () => {}
         );
         log(`scartata: ${id} — ${bozza.titolo}`);
+      } else if (azione === "rig") {
+        const aggiornata = rigeneraCopertina(id);
+
+        if (bozza.messageId) {
+          await modificaFoto(
+            bozza.messageId,
+            percorsoCopertinaBozza(id),
+            messaggioBozza(
+              { id, ...aggiornata.dati, corpo: aggiornata.corpo },
+              { perFoto: true }
+            ),
+            id
+          ).catch((errore) =>
+            log(`modifica della copertina fallita: ${errore.message}`)
+          );
+        }
+
+        modifiche = true;
+
+        await rispondiCallback(risposta.callbackId, "Nuova copertina pronta").catch(
+          () => {}
+        );
+        log(`copertina rigenerata: ${id}`);
       } else {
         await rispondiCallback(
           risposta.callbackId,

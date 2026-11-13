@@ -21,7 +21,11 @@ layout: base.njk
     </header>
 
     <figure class="articolo-immagine illustrazione">
-      {{ id | illustrazione | safe }}
+      {% if copertina and copertina.file %}
+      <img src="{{ copertina.file | url }}" alt="" width="1200" height="600" decoding="async">
+      {% else %}
+      {{ titolo | illustrazione(copertina.forma) | safe }}
+      {% endif %}
     </figure>
 
     {% if punti_chiave and punti_chiave.length %}

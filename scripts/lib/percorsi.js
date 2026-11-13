@@ -6,6 +6,8 @@ const PERCORSI = {
   radice: RADICE,
   redazione: path.join(RADICE, "_redazione"),
   bozze: path.join(RADICE, "_redazione", "bozze"),
+  copertineBozze: path.join(RADICE, "_redazione", "copertine"),
+  copertinePubblicate: path.join(RADICE, "src", "assets", "copertine"),
   archivio: path.join(RADICE, "_redazione", "archivio.json"),
   statoBozze: path.join(RADICE, "_redazione", "bozze.json"),
   credenziali: path.join(RADICE, "_redazione", "credenziali.enc"),

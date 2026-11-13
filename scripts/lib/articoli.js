@@ -5,6 +5,7 @@ const matter = require("gray-matter");
 
 const { PERCORSI } = require("./config");
 const { contaParole, giornoCompatto } = require("./util");
+const { generaCopertina, formaCopertina } = require("./copertine");
 
 function generaId(data = new Date()) {
   return `tp-${giornoCompatto(data)}-${crypto.randomBytes(3).toString("hex")}`;
@@ -86,7 +87,36 @@ function validaArticolo(articolo, config) {
   return errori;
 }
 
-function frontMatter(articolo, id, approvato) {
+function percorsoCopertinaBozza(id) {
+  return path.join(PERCORSI.copertineBozze, `${id}.png`);
+}
+
+function percorsoCopertinaPubblica(id) {
+  return path.join(PERCORSI.copertinePubblicate, `${id}.png`);
+}
+
+/**
+ * La copertina nasce insieme alla notizia: file, forma e seme finiscono nel
+ * front matter, così la pagina pubblicata mostra esattamente l'immagine
+ * approvata su Telegram.
+ */
+function datiCopertina(id, seme, forma) {
+  return {
+    file: `/assets/copertine/${id}.png`,
+    forma: forma || formaCopertina(seme || id),
+    seme: seme || id,
+  };
+}
+
+function scriviCopertina(id, copertina) {
+  fs.mkdirSync(PERCORSI.copertineBozze, { recursive: true });
+  fs.writeFileSync(
+    percorsoCopertinaBozza(id),
+    generaCopertina({ seme: copertina.seme, forma: copertina.forma })
+  );
+}
+
+function frontMatter(articolo, id, approvato, copertina) {
   return {
     id,
     titolo: String(articolo.titolo).trim(),
@@ -94,6 +124,7 @@ function frontMatter(articolo, id, approvato) {
     categoria: String(articolo.categoria).trim(),
     date: new Date(),
     approvato,
+    copertina,
     fonti: (articolo.fonti || []).map((fonte) => ({
       titolo: String(fonte.titolo ?? "").trim(),
       url: String(fonte.url ?? "").trim(),
@@ -104,13 +135,39 @@ function frontMatter(articolo, id, approvato) {
 
 function scriviBozza(articolo, id) {
   fs.mkdirSync(PERCORSI.bozze, { recursive: true });
+
+  const copertina = datiCopertina(
+    id,
+    crypto.randomBytes(8).toString("hex"),
+    formaCopertina(articolo.titolo || id)
+  );
+  scriviCopertina(id, copertina);
+
   const percorso = path.join(PERCORSI.bozze, `${id}.md`);
   const contenuto = matter.stringify(
     normalizzaCorpo(articolo.corpo) + "\n",
-    frontMatter(articolo, id, false)
+    frontMatter(articolo, id, false, copertina)
   );
   fs.writeFileSync(percorso, contenuto);
   return percorso;
+}
+
+/** Nuova copertina per una bozza già in attesa: cambia seme, non la forma. */
+function rigeneraCopertina(id) {
+  const bozza = leggiBozza(id);
+  const precedente = bozza.data.copertina || {};
+  const copertina = datiCopertina(
+    id,
+    crypto.randomBytes(8).toString("hex"),
+    precedente.forma || formaCopertina(bozza.data.titolo || id)
+  );
+
+  scriviCopertina(id, copertina);
+
+  const dati = { ...bozza.data, copertina };
+  fs.writeFileSync(percorsoBozza(id), matter.stringify(bozza.content, dati));
+
+  return { dati, corpo: bozza.content };
 }
 
 function percorsoBozza(id) {
@@ -130,7 +187,29 @@ function leggiBozza(id) {
 /** Sposta la bozza tra gli articoli pubblicati, marcandola come approvata. */
 function promuoviBozza(id) {
   const bozza = leggiBozza(id);
-  const dati = { ...bozza.data, approvato: true, date: new Date() };
+  const copertina = bozza.data.copertina || datiCopertina(id, id);
+
+  fs.mkdirSync(PERCORSI.copertinePubblicate, { recursive: true });
+
+  const origine = percorsoCopertinaBozza(id);
+  const immagine = percorsoCopertinaPubblica(id);
+
+  if (fs.existsSync(origine)) {
+    fs.renameSync(origine, immagine);
+  } else {
+    // bozza creata prima delle copertine automatiche
+    fs.writeFileSync(
+      immagine,
+      generaCopertina({ seme: copertina.seme || id, forma: copertina.forma })
+    );
+  }
+
+  const dati = {
+    ...bozza.data,
+    approvato: true,
+    date: new Date(),
+    copertina: { ...copertina, file: `/assets/copertine/${id}.png` },
+  };
 
   fs.mkdirSync(PERCORSI.articoli, { recursive: true });
   const destinazione = path.join(PERCORSI.articoli, `${id}.md`);
@@ -140,9 +219,13 @@ function promuoviBozza(id) {
   return { percorso: destinazione, dati, corpo: bozza.content };
 }
 
+/** Scartare la notizia scarta anche la sua copertina. */
 function scartaBozza(id) {
   const percorso = percorsoBozza(id);
   if (fs.existsSync(percorso)) fs.unlinkSync(percorso);
+
+  const copertina = percorsoCopertinaBozza(id);
+  if (fs.existsSync(copertina)) fs.unlinkSync(copertina);
 }
 
 module.exports = {
@@ -150,8 +233,11 @@ module.exports = {
   normalizzaCorpo,
   validaArticolo,
   scriviBozza,
+  rigeneraCopertina,
   leggiBozza,
   promuoviBozza,
   scartaBozza,
   percorsoBozza,
+  percorsoCopertinaBozza,
+  percorsoCopertinaPubblica,
 };

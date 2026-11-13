@@ -1,6 +1,10 @@
 <li class="riga">
   <a class="riga-immagine illustrazione" href="{{ articolo.url | url }}" tabindex="-1" aria-hidden="true">
-    {{ articolo.data.id | illustrazione | safe }}
+    {% if articolo.data.copertina and articolo.data.copertina.file %}
+    <img src="{{ articolo.data.copertina.file | url }}" alt="" width="1200" height="600" loading="lazy" decoding="async">
+    {% else %}
+    {{ articolo.data.titolo | illustrazione(articolo.data.copertina.forma) | safe }}
+    {% endif %}
   </a>
   <div class="riga-testo">
     <p class="riga-meta">

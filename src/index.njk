@@ -10,7 +10,11 @@ layout: base.njk
   <div class="prima-pagina">
     <article class="apertura">
       <a class="apertura-immagine illustrazione" href="{{ inEvidenza.url | url }}" tabindex="-1" aria-hidden="true">
-        {{ inEvidenza.data.id | illustrazione | safe }}
+        {% if inEvidenza.data.copertina and inEvidenza.data.copertina.file %}
+        <img src="{{ inEvidenza.data.copertina.file | url }}" alt="" width="1200" height="600" decoding="async">
+        {% else %}
+        {{ inEvidenza.data.titolo | illustrazione(inEvidenza.data.copertina.forma) | safe }}
+        {% endif %}
       </a>
       <p class="riga-meta">
         <a class="categoria" href="{{ inEvidenza.data.categoria | urlCategoria | url }}">{{ inEvidenza.data.categoria }}</a>
