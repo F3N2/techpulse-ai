@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
-  <script src="{{ '/assets/js/tema.js' | url }}"></script>
+  <script src="{{ '/assets/js/tema.js' | url }}?v={{ '/assets/js/tema.js' | impronta }}"></script>
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>{% if titolo %}{{ titolo }} · {% endif %}{{ site.nome }}</title>
   <meta name="description" content="{{ descrizione or site.descrizione }}">
@@ -16,7 +16,7 @@
   <meta property="og:title" content="{{ titolo or site.nome }}">
   <meta property="og:description" content="{{ descrizione or site.descrizione }}">
   <link rel="canonical" href="{{ site.url }}{{ page.url }}">
-  <link rel="stylesheet" href="{{ '/assets/css/style.css' | url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | url }}?v={{ '/assets/css/style.css' | impronta }}">
 </head>
 <body>
   <a class="skip" href="#contenuto">Vai al contenuto</a>

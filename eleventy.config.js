@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const crypto = require("crypto");
 const markdownIt = require("markdown-it");
 
 const ID_VALIDO = /^tp-\d{8}-[a-f0-9]{6}$/;
@@ -127,6 +128,16 @@ module.exports = function (eleventyConfig) {
 
   eleventyConfig.addFilter("dataIso", (d) =>
     new Date(d).toISOString()
+  );
+
+  // Impronta del contenuto: se il file cambia cambia anche l'URL, così dopo
+  // un deploy il browser non continua a usare una copia vecchia dalla cache.
+  eleventyConfig.addFilter("impronta", (percorso) =>
+    crypto
+      .createHash("sha1")
+      .update(fs.readFileSync(path.join(__dirname, "src", percorso.replace(/^\//, ""))))
+      .digest("hex")
+      .slice(0, 8)
   );
 
   eleventyConfig.addFilter("perCategoria", (lista, nomeCategoria) =>
