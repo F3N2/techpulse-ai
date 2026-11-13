@@ -1,0 +1,93 @@
+[
+  {
+    "nome": "ChatGPT",
+    "categoria": "Assistenti",
+    "descrizione": "L'assistente più diffuso: scrive, riassume, traduce e ragiona su testi e file che gli passi.",
+    "url": "https://chatgpt.com",
+    "costo": "Freemium"
+  },
+  {
+    "nome": "Claude",
+    "categoria": "Assistenti",
+    "descrizione": "Ottimo sui testi lunghi e sul codice: risponde in italiano con tono pacato e cita i passaggi.",
+    "url": "https://claude.ai",
+    "costo": "Freemium"
+  },
+  {
+    "nome": "Gemini",
+    "categoria": "Assistenti",
+    "descrizione": "Integrato con Gmail, Documenti e Drive: utile per riassumere la posta o cercare dentro i file.",
+    "url": "https://gemini.google.com",
+    "costo": "Gratis"
+  },
+  {
+    "nome": "Perplexity",
+    "categoria": "Ricerca",
+    "descrizione": "Risponde alle domande citando le fonti una per una: il modo più rapido per farsi un'idea.",
+    "url": "https://www.perplexity.ai",
+    "costo": "Freemium"
+  },
+  {
+    "nome": "NotebookLM",
+    "categoria": "Ricerca",
+    "descrizione": "Carichi documenti e PDF e ne ricavi riassunti, domande e una sintesi audio in italiano.",
+    "url": "https://notebooklm.google.com",
+    "costo": "Gratis"
+  },
+  {
+    "nome": "LM Arena",
+    "categoria": "Ricerca",
+    "descrizione": "Confronti due modelli alla cieca sulla stessa domanda e vedi quale risponde meglio.",
+    "url": "https://lmarena.ai",
+    "costo": "Gratis"
+  },
+  {
+    "nome": "Hugging Face",
+    "categoria": "Sviluppo",
+    "descrizione": "Il catalogo dei modelli open source: provi un modello nel browser prima di scaricarlo.",
+    "url": "https://huggingface.co",
+    "costo": "Freemium"
+  },
+  {
+    "nome": "Cursor",
+    "categoria": "Sviluppo",
+    "descrizione": "Editor di codice con l'AI dentro: riscrive funzioni intere capendo il resto del progetto.",
+    "url": "https://cursor.com",
+    "costo": "Freemium"
+  },
+  {
+    "nome": "DeepL",
+    "categoria": "Scrittura",
+    "descrizione": "Traduzioni più naturali dei traduttori automatici classici, con alternativa di frase.",
+    "url": "https://www.deepl.com",
+    "costo": "Freemium"
+  },
+  {
+    "nome": "Gamma",
+    "categoria": "Scrittura",
+    "descrizione": "Da un testo o un link costruisce presentazioni e pagine ordinate, modificabili a mano.",
+    "url": "https://gamma.app",
+    "costo": "Freemium"
+  },
+  {
+    "nome": "Ideogram",
+    "categoria": "Immagini",
+    "descrizione": "Genera immagini con testo leggibile dentro: copertine, locandine e prove grafiche rapide.",
+    "url": "https://ideogram.ai",
+    "costo": "Freemium"
+  },
+  {
+    "nome": "ElevenLabs",
+    "categoria": "Audio",
+    "descrizione": "Voce sintetica in italiano credibile: doppiaggi, audiolibri e lettura di articoli.",
+    "url": "https://elevenlabs.io",
+    "costo": "Freemium"
+  },
+  {
+    "nome": "Suno",
+    "categoria": "Audio",
+    "descrizione": "Scrivi il testo e ottieni una canzone completa: utile per jingle e colonne sonore provvisorie.",
+    "url": "https://suno.com",
+    "costo": "Freemium"
+  }
+]

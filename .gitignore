@@ -4,5 +4,7 @@ _site/
 .env.*
 .dev.vars
 *.log
-_redazione/credenziali.enc
 artifacts/
+
+# Le credenziali della redazione e l'API dei tool sono cifrate (AES-256-GCM con
+# chiave derivata dal token del bot): stanno nel repository, ma illeggibili.

@@ -1,4 +1,4 @@
-# FARO
+# NEXORA
 
 Magazine italiano sull'intelligenza artificiale, costruito con
 Eleventy e pubblicato su GitHub Pages, con una redazione automatica che propone
@@ -103,7 +103,37 @@ Altri comandi:
 Se il secret `AI_API_KEY` è presente su GitHub, ha la precedenza sulla chiave inserita
 da Telegram.
 
-### 6. Prova la pipeline
+### 6. API separata per i tool (opzionale)
+
+La pagina **Tool** (`/tool/`) elenca gli strumenti scelti dalla redazione. Per far
+consigliare al bot quale strumento usare serve una seconda API, indipendente da quella
+della redazione: può essere lo stesso provider o un altro, purché compatibile OpenAI.
+
+```
+/toolapi <la-tua-chiave>
+```
+
+| Comando | Effetto |
+| --- | --- |
+| `/toolapi url <indirizzo>` | cambia endpoint (default `https://api.openai.com/v1`) |
+| `/toolapi modello <nome>` | cambia il modello (default `gpt-4o-mini`) |
+| `/toolapi test` | fa una richiesta reale di prova |
+| `/toolapi stato` | mostra endpoint, modello e ultime 4 cifre della chiave |
+| `/toolapi rimuovi` | cancella chiave ed endpoint |
+
+Con la chiave configurata puoi scrivere in chat:
+
+```
+/tool devo riassumere un PDF di 60 pagine
+```
+
+Il bot interroga l'API con in contesto la tabella della pagina Tool e risponde con lo
+strumento più adatto e i passi per usarlo. La chiave è cifrata in
+`_redazione/api-tool.enc` con la chiave derivata dal token del bot; in alternativa puoi
+usare i secret GitHub `TOOL_API_KEY`, `TOOL_API_BASE` e `TOOL_API_MODEL`, che hanno la
+precedenza.
+
+### 7. Prova la pipeline
 
 Vai in **Actions → Redazione AI – genera bozze → Run workflow**. Dopo pochi secondi
 dovresti ricevere su Telegram una o due bozze con i pulsanti. Premi ✅ e attendi fino a
@@ -122,7 +152,8 @@ node --env-file=.env scripts/gestisci-approvazioni.js
 ```
 
 Il `.env` deve contenere `AI_API_KEY`, `AI_BASE_URL`, `AI_MODEL`,
-`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`. Per provare la logica senza chiavi reali si
+`TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`; per l'API dei tool, `TOOL_API_KEY`,
+`TOOL_API_BASE` e `TOOL_API_MODEL`. Per provare la logica senza chiavi reali si
 può puntare `AI_BASE_URL` e `TELEGRAM_API_BASE` a un server locale che simula le API.
 
 ## Impostazioni editoriali
@@ -167,6 +198,25 @@ Testo dell'articolo in markdown.
 I controlli automatici in `eleventy.config.js` bloccano ID non validi o duplicati,
 articoli con `approvato` diverso da `true`, titoli mancanti e categorie mancanti.
 
+## Zona tool
+
+La tabella in `/tool/` si modifica da un solo file, `src/_data/tools.json`: ogni voce ha
+`nome`, `categoria`, `descrizione`, `url` e `costo`.
+
+```json
+{
+  "nome": "ChatGPT",
+  "categoria": "Assistenti",
+  "descrizione": "L'assistente più diffuso: scrive, riassume, traduce.",
+  "url": "https://chatgpt.com",
+  "costo": "Freemium"
+}
+```
+
+Aggiungi la riga e fai commit: la pagina si rigenera da sola, con il conteggio aggiornato.
+Gli stessi dati vengono passati all'API dei tool quando scrivi `/tool` su Telegram, così
+il bot consiglia solo strumenti che esistono davvero in tabella.
+
 ## Struttura
 
 ```
@@ -178,8 +228,10 @@ _redazione/
 scripts/
   genera-bozze.js           raccolta → selezione → scrittura → Telegram
   gestisci-approvazioni.js  clic ✅/❌ → pubblicazione
-  lib/                      util, config, notizie (RSS), ai, articoli, telegram
+  lib/                      util, config, notizie (RSS), ai, apiTool, articoli, telegram
 src/                        sito Eleventy (pagine, layout, dati, articoli)
+  tool.njk                  pagina dei tool
+  _data/tools.json          elenco dei tool: una riga per strumento
 .github/workflows/
   deploy.yml                pubblica il sito a ogni push su main
   redazione-genera.yml      cron ogni 3 ore

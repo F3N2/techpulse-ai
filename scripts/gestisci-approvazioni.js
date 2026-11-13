@@ -26,6 +26,14 @@ const {
   descrizioneProvider,
 } = require("./lib/credenziali");
 const { verificaChiave } = require("./lib/ai");
+const {
+  leggiApiTool,
+  salvaApiTool,
+  eliminaApiTool,
+  descrizioneApiTool,
+  eseguiTool,
+  verificaApiTool,
+} = require("./lib/apiTool");
 const { escapeHtml, log, tronca } = require("./lib/util");
 
 const AIUTO_API = [
@@ -44,7 +52,26 @@ const AIUTO_API = [
   "<code>/api stato</code> — mostra la configurazione attiva",
   "<code>/api rimuovi</code> — cancella la chiave salvata",
   "",
+  "Per l'API separata dei tool: <code>/toolapi aiuto</code>.",
+  "",
   "Puoi anche rispondere a questo messaggio con la sola chiave.",
+  "",
+  "<i>La chiave viene cifrata nel repository e il tuo messaggio viene eliminato.</i>",
+].join("\n");
+
+const AIUTO_TOOL = [
+  "<b>API separata per i tool</b>",
+  "",
+  "Serve a far consigliare al bot gli strumenti della pagina /tool.",
+  "",
+  "<code>/toolapi &lt;chiave&gt;</code> — salva la chiave (endpoint e modello predefiniti)",
+  "<code>/toolapi url &lt;indirizzo&gt;</code> — cambia l'endpoint (deve essere compatibile OpenAI)",
+  "<code>/toolapi modello &lt;nome&gt;</code> — cambia il modello",
+  "<code>/toolapi stato</code> — mostra la configurazione attiva",
+  "<code>/toolapi test</code> — fa una richiesta reale di prova",
+  "<code>/toolapi rimuovi</code> — cancella chiave ed endpoint",
+  "",
+  "Poi scrivi <code>/tool &lt;cosa devi fare&gt;</code> per farti indicare lo strumento giusto.",
   "",
   "<i>La chiave viene cifrata nel repository e il tuo messaggio viene eliminato.</i>",
 ].join("\n");
@@ -122,6 +149,192 @@ async function salvaEVerifica({ chiave, provider, modello }) {
   }
 
   return esito.ok;
+}
+
+async function statoApiTool() {
+  let salvate = null;
+  let errore = "";
+
+  try {
+    salvate = leggiApiTool();
+  } catch (problema) {
+    errore = problema.message;
+  }
+
+  const daAmbiente = Boolean(process.env.TOOL_API_KEY);
+  const righe = ["<b>API per i tool</b>", ""];
+
+  if (daAmbiente) {
+    righe.push("🔑 Chiave: impostata come secret <code>TOOL_API_KEY</code> su GitHub.");
+    righe.push(`🌐 Endpoint: <code>${escapeHtml(process.env.TOOL_API_BASE || "predefinito")}</code>`);
+    righe.push(`🧠 Modello: <code>${escapeHtml(process.env.TOOL_API_MODEL || "predefinito")}</code>`);
+  } else if (salvate) {
+    righe.push(
+      `🔑 Chiave: salvata da Telegram (termina con …${escapeHtml(
+        String(salvate.chiave).slice(-4)
+      )}).`
+    );
+    righe.push(`🌐 Endpoint: <code>${escapeHtml(salvate.baseUrl)}</code>`);
+    righe.push(`🧠 Modello: <code>${escapeHtml(salvate.modello)}</code>`);
+    righe.push(`📅 Inserita il ${escapeHtml(String(salvate.inseritaIl).slice(0, 10))}.`);
+  } else {
+    righe.push("⚠️ Nessuna API per i tool configurata.");
+  }
+
+  if (errore) righe.push(`❌ ${escapeHtml(errore)}`);
+
+  await inviaMessaggio(righe.join("\n"));
+}
+
+async function gestisciComandoToolApi(testo) {
+  const argomenti = testo
+    .replace(/^\/toolapi(@\w+)?/i, "")
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+  const primo = (argomenti[0] || "").toLowerCase();
+  const fermo = { modifiche: false, chiaveInserita: false, daEliminare: false };
+
+  if (!argomenti.length) {
+    await inviaMessaggio(AIUTO_TOOL);
+    return fermo;
+  }
+
+  if (primo === "stato" || primo === "aiuto" || primo === "help") {
+    await statoApiTool();
+    return fermo;
+  }
+
+  if (primo === "rimuovi" || primo === "cancella") {
+    const rimosse = eliminaApiTool();
+    await inviaMessaggio(
+      rimosse
+        ? "🗑️ API per i tool cancellata. Per riconfigurarla: <code>/toolapi &lt;chiave&gt;</code>."
+        : "Non c'era nessuna API per i tool salvata."
+    );
+    return { ...fermo, modifiche: rimosse };
+  }
+
+  if (primo === "url" || primo === "modello") {
+    const valore = argomenti[1];
+
+    if (!valore) {
+      await inviaMessaggio(`Uso: <code>/toolapi ${primo} &lt;valore&gt;</code>`);
+      return fermo;
+    }
+
+    try {
+      const salvate = salvaApiTool(
+        primo === "url" ? { baseUrl: valore } : { modello: valore }
+      );
+
+      await inviaMessaggio(
+        [
+          "✅ <b>API per i tool aggiornata</b>",
+          "",
+          escapeHtml(descrizioneApiTool(salvate)),
+          "",
+          "Prova una richiesta con <code>/toolapi test</code>.",
+        ].join("\n")
+      );
+
+      return { ...fermo, modifiche: true };
+    } catch (errore) {
+      await inviaMessaggio(`❌ ${escapeHtml(errore.message)}`);
+      return fermo;
+    }
+  }
+
+  if (primo === "test") {
+    const esito = await verificaApiTool();
+
+    await inviaMessaggio(
+      esito.ok
+        ? "✅ <b>API per i tool funzionante</b>\n\nOra puoi scrivere <code>/tool &lt;richiesta&gt;</code>."
+        : `❌ <b>Test fallito</b>\n\n<code>${escapeHtml(tronca(esito.errore, 400))}</code>`
+    );
+
+    return fermo;
+  }
+
+  const chiave = argomenti[0];
+
+  if (chiave.length < 12) {
+    await inviaMessaggio(
+      "⚠️ La chiave sembra troppo corta: controlla di aver copiato tutto."
+    );
+    return { ...fermo, daEliminare: true };
+  }
+
+  let salvate;
+
+  try {
+    salvate = salvaApiTool({ chiave });
+  } catch (errore) {
+    await inviaMessaggio(`❌ ${escapeHtml(errore.message)}`);
+    return { ...fermo, daEliminare: true };
+  }
+
+  const esito = await verificaApiTool(salvate);
+
+  await inviaMessaggio(
+    esito.ok
+      ? [
+          "✅ <b>API per i tool salvata e verificata</b>",
+          "",
+          escapeHtml(descrizioneApiTool(salvate)),
+          "",
+          "Scrivi <code>/tool cosa devo fare</code> per un consiglio tra gli strumenti della pagina Tool.",
+        ].join("\n")
+      : [
+          "⚠️ <b>Chiave salvata, ma il test è fallito</b>",
+          "",
+          `<code>${escapeHtml(tronca(esito.errore, 400))}</code>`,
+          "",
+          "Controlla endpoint con <code>/toolapi url &lt;indirizzo&gt;</code> e modello con <code>/toolapi modello &lt;nome&gt;</code>.",
+        ].join("\n")
+  );
+
+  return { modifiche: true, chiaveInserita: esito.ok, daEliminare: true };
+}
+
+async function eseguiRichiestaTool(testo) {
+  const richiesta = testo.replace(/^\/tool(@\w+)?/i, "").trim();
+
+  if (!richiesta) {
+    await inviaMessaggio(
+      [
+        "Uso: <code>/tool &lt;cosa devi fare&gt;</code>",
+        "",
+        "Esempio: <code>/tool devo riassumere un PDF di 60 pagine</code>",
+      ].join("\n")
+    );
+    return;
+  }
+
+  try {
+    const { testo: risposta, modello } = await eseguiTool({ richiesta });
+
+    await inviaMessaggio(
+      [
+        "🧰 <b>Strumento consigliato</b>",
+        "",
+        escapeHtml(tronca(risposta, 3000)),
+        "",
+        `<i>API dei tool · ${escapeHtml(modello)}</i>`,
+      ].join("\n")
+    );
+  } catch (errore) {
+    await inviaMessaggio(
+      [
+        "❌ <b>Non riesco a usare i tool</b>",
+        "",
+        `<code>${escapeHtml(tronca(errore.message, 300))}</code>`,
+        "",
+        "Configura l'API con <code>/toolapi &lt;chiave&gt;</code>.",
+      ].join("\n")
+    );
+  }
 }
 
 /**
@@ -225,6 +438,28 @@ async function gestisciMessaggi(messaggi, chatId) {
 
     const testo = messaggio.testo || "";
     if (!testo) continue;
+
+    const comandoToolApi = /^\/toolapi(@\w+)?(\s|$)/i.test(testo);
+    const comandoTool = /^\/tool(@\w+)?(\s|$)/i.test(testo);
+
+    if (comandoToolApi || comandoTool) {
+      if (comandoToolApi) {
+        const esito = await gestisciComandoToolApi(testo);
+
+        modifiche = modifiche || esito.modifiche;
+        chiaveInserita = chiaveInserita || esito.chiaveInserita;
+
+        if (esito.daEliminare) {
+          await eliminaMessaggio(messaggio.messageId).catch(() =>
+            log("impossibile eliminare il messaggio con la chiave")
+          );
+        }
+      } else {
+        await eseguiRichiestaTool(testo);
+      }
+
+      continue;
+    }
 
     const comandoApi = /^\/api(@\w+)?(\s|$)/i.test(testo);
     const rispostaAllaGuida =

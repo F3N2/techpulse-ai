@@ -159,6 +159,8 @@ function descrizioneProvider(credenziali) {
 module.exports = {
   PROVIDER,
   PROVIDER_PREDEFINITO,
+  cifra,
+  decifra,
   leggiCredenziali,
   salvaCredenziali,
   eliminaCredenziali,

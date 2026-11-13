@@ -1,0 +1,52 @@
+---
+layout: base.njk
+titolo: "Tool"
+descrizione: "Gli strumenti di intelligenza artificiale scelti dalla redazione di NEXORA: cosa fanno, a chi servono e quanto costano, in una tabella."
+permalink: "/tool/"
+---
+
+<section class="container">
+  <div class="page-head">
+    <p class="kicker">Scelti e usati dalla redazione</p>
+    <h1>Tool utili, <em>provati</em>.</h1>
+    <p>
+      Pochi strumenti, non un elenco infinito: qui trovi quelli che uso davvero per
+      scrivere, cercare, programmare e fare immagini. Scegli la riga che ti serve e
+      si apre il sito ufficiale.
+    </p>
+  </div>
+
+  <div class="tabella-scroll">
+    <table class="tabella-tool">
+      <caption class="tabella-didascalia">
+        {{ tools.length }} strumenti divisi per categoria, con costo indicativo
+      </caption>
+      <thead>
+        <tr>
+          <th scope="col">Strumento</th>
+          <th scope="col">A cosa serve</th>
+          <th scope="col">Categoria</th>
+          <th scope="col">Costo</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for t in tools %}
+        <tr>
+          <th scope="row">
+            <a class="tool-nome" href="{{ t.url }}" target="_blank" rel="noopener noreferrer nofollow">{{ t.nome }}</a>
+          </th>
+          <td class="tool-descrizione">{{ t.descrizione }}</td>
+          <td><span class="tag">{{ t.categoria }}</span></td>
+          <td class="tool-costo">{{ t.costo }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <p class="tool-nota">
+    Le descrizioni sono della redazione, i siti sono esterni e non controlliamo i loro
+    contenuti. Manca uno strumento che usi e che merita? Segnalalo dalla pagina
+    <a href="{{ '/contatti/' | url }}">Contatti</a>.
+  </p>
+</section>

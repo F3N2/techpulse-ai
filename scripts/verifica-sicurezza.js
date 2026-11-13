@@ -58,7 +58,7 @@ function main() {
     for (const file of elencaFile(path.join(RADICE, cartella))) {
       const relativo = path.relative(RADICE, file);
 
-      if (/credenziali/i.test(path.basename(file)) && path.extname(file) !== ".enc") {
+      if (/credenziali|api-tool/i.test(path.basename(file)) && path.extname(file) !== ".enc") {
         problemi.push(`${relativo}: file di credenziali non cifrato nel progetto`);
         continue;
       }
@@ -88,7 +88,7 @@ function main() {
 
   if (fs.existsSync(sito)) {
     for (const file of elencaFile(sito)) {
-      if (/credenziali|bozze|archivio/i.test(path.basename(file))) {
+      if (/credenziali|bozze|archivio|api-tool/i.test(path.basename(file))) {
         problemi.push(
           `${path.relative(RADICE, file)}: file della redazione finito nel sito pubblicato`
         );

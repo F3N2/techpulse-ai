@@ -25,7 +25,7 @@
     <div class="container header-inner">
       <a class="brand" href="{{ '/' | url }}" aria-label="{{ site.nome }} – Home">
         <svg viewBox="0 0 26 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true"><circle cx="6" cy="12" r="3.3"/><path d="M12.4 5.6 17 2.7M12.4 12h9.6M12.4 18.4 17 21.3"/></svg>
-        <span>FARO<b>.</b></span>
+        <span>NEXORA<b>.</b></span>
       </a>
 
       <input type="checkbox" id="menu-toggle" class="menu-toggle" aria-label="Apri o chiudi il menu">
@@ -37,6 +37,7 @@
         {% for c in categorie %}
         <a href="{{ ('/' ~ c.slug ~ '/') | url }}">{{ c.nome }}</a>
         {% endfor %}
+        <a href="{{ '/tool/' | url }}">Tool</a>
       </nav>
     </div>
   </header>
@@ -56,6 +57,7 @@
           <h4>Sezioni</h4>
           <ul>
             <li><a href="{{ '/ultime-notizie/' | url }}">Ultime notizie</a></li>
+            <li><a href="{{ '/tool/' | url }}">Tool</a></li>
             {% for c in categorie %}
             <li><a href="{{ ('/' ~ c.slug ~ '/') | url }}">{{ c.nome }}</a></li>
             {% endfor %}
