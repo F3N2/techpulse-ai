@@ -191,6 +191,9 @@ sottotitolo: "Una riga che spiega perché conta"
 categoria: "Intelligenza artificiale"
 date: 2026-11-13T09:00:00+01:00
 approvato: true
+punti_chiave:
+  - "Il fatto principale in una riga."
+  - "Un secondo dato che aiuta a capire."
 fonti:
   - titolo: "Nome della fonte"
     url: "https://esempio.it/notizia"
@@ -199,6 +202,11 @@ note_verifica: "Cosa è confermato e cosa resta da verificare."
 
 Testo dell'articolo in markdown.
 ```
+
+`punti_chiave` è facoltativo e diventa il riquadro «In breve» nella colonna
+laterale dell'articolo. La pagina si impagina da sola: briciole di navigazione,
+data e tempo di lettura nella testata, fonti numerate, articoli correlati della
+stessa categoria e i link all'articolo precedente e successivo.
 
 I controlli automatici in `eleventy.config.js` bloccano ID non validi o duplicati,
 articoli con `approvato` diverso da `true`, titoli mancanti e categorie mancanti.

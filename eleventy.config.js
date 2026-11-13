@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
 const markdownIt = require("markdown-it");
+const CATEGORIE = require("./src/_data/categorie.json");
 
 // Il sito è un sito di progetto di GitHub Pages: il percorso pubblico segue il
 // nome del repository, quindi un rename non richiede modifiche al codice.
@@ -135,6 +136,47 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.addFilter("dataIso", (d) =>
     new Date(d).toISOString()
   );
+
+  // Tempo di lettura stimato: 200 parole al minuto, minimo un minuto.
+  eleventyConfig.addFilter("tempoLettura", (testo) => {
+    const parole = String(testo || "")
+      .replace(/<[^>]*>/g, " ")
+      .split(/\s+/)
+      .filter(Boolean).length;
+    const minuti = Math.max(1, Math.round(parole / 200));
+    return `${minuti} min di lettura`;
+  });
+
+  eleventyConfig.addFilter("urlCategoria", (nome) => {
+    const categoria = CATEGORIE.find((c) => c.nome === nome);
+    return categoria ? `/${categoria.slug}/` : "/";
+  });
+
+  // Articoli da leggere dopo: stessa categoria, escluso quello corrente.
+  eleventyConfig.addFilter("correlati", (lista, url, categoria, massimo = 3) =>
+    (lista || [])
+      .filter(
+        (articolo) =>
+          articolo.url !== url && articolo.data.categoria === categoria
+      )
+      .slice(0, massimo)
+  );
+
+  // L'elenco è dal più recente: il successivo è il più nuovo, il precedente
+  // il più vecchio.
+  eleventyConfig.addFilter("vicini", (lista, url) => {
+    const elenco = lista || [];
+    const indice = elenco.findIndex((articolo) => articolo.url === url);
+
+    if (indice === -1) {
+      return { precedente: null, successivo: null };
+    }
+
+    return {
+      precedente: elenco[indice + 1] || null,
+      successivo: elenco[indice - 1] || null,
+    };
+  });
 
   // Impronta del contenuto: se il file cambia cambia anche l'URL, così dopo
   // un deploy il browser non continua a usare una copia vecchia dalla cache.
