@@ -144,12 +144,16 @@ dovresti ricevere su Telegram una o due bozze con i pulsanti. Premi ✅ e attend
 ```bash
 npm install
 npm run build                 # costruisce il sito in _site/
-npm start                     # anteprima locale su http://localhost:8080/techpulse-ai/
+npm start                     # anteprima locale su http://localhost:8080/nexora/
 
 # redazione, con le credenziali in un file .env (mai committarlo)
 node --env-file=.env scripts/genera-bozze.js
 node --env-file=.env scripts/gestisci-approvazioni.js
 ```
+
+Il percorso e l'URL pubblici derivano dal nome del repository GitHub: se rinomini il
+repository non serve cambiare codice, basta rilanciare il workflow **Build and deploy
+NEXORA** da Actions → Run workflow.
 
 Il `.env` deve contenere `AI_API_KEY`, `AI_BASE_URL`, `AI_MODEL`,
 `TELEGRAM_BOT_TOKEN`, `TELEGRAM_CHAT_ID`; per l'API dei tool, `TOOL_API_KEY`,

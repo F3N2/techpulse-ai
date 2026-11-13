@@ -3,6 +3,12 @@ const path = require("path");
 const crypto = require("crypto");
 const markdownIt = require("markdown-it");
 
+// Il sito è un sito di progetto di GitHub Pages: il percorso pubblico segue il
+// nome del repository, quindi un rename non richiede modifiche al codice.
+const NOME_REPOSITORY = (
+  process.env.GITHUB_REPOSITORY || "F3N2/nexora"
+).split("/")[1];
+
 const ID_VALIDO = /^tp-\d{8}-[a-f0-9]{6}$/;
 const CARTELLA_ARTICOLI = "src/articoli";
 const FILE_DATI_AMMESSO = "articoli.json";
@@ -168,6 +174,6 @@ module.exports = function (eleventyConfig) {
       data: "_data",
       output: "_site",
     },
-    pathPrefix: "/techpulse-ai/",
+    pathPrefix: `/${NOME_REPOSITORY}/`,
   };
 };
