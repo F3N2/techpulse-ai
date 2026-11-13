@@ -26,7 +26,7 @@ const {
 } = require("./lib/util");
 
 const SISTEMA_SELEZIONE = [
-  "Sei il caporedattore di TECHPULSE AI, magazine italiano di tecnologia.",
+  "Sei il caporedattore di FARO, magazine italiano di tecnologia.",
   "Scegli le notizie più rilevanti per un pubblico italiano, scartando duplicati,",
   "contenuti promozionali, rumor non confermati e temi fuori argomento",
   "(sport, cronaca, politica non tecnologica).",
@@ -34,7 +34,7 @@ const SISTEMA_SELEZIONE = [
 ].join(" ");
 
 const SISTEMA_SCRITTURA = [
-  "Sei un giornalista italiano specializzato in tecnologia e scrivi per TECHPULSE AI.",
+  "Sei un giornalista italiano specializzato in tecnologia e scrivi per FARO.",
   "Scrivi in italiano corretto, in modo chiaro, asciutto e verificabile.",
   "Usi soltanto le informazioni contenute nella notizia fornita:",
   "non inventi cifre, citazioni, nomi o date e non aggiungi dettagli di tua iniziativa.",

@@ -1,5 +1,5 @@
 /* ==========================================================
-   TECHPULSE AI — foglio di stile
+   FARO — foglio di stile
    Tre modalità: scuro (predefinito), chiaro, lettura.
    Tutti i colori passano da token: cambiare tema significa
    cambiare token, non riscrivere i componenti.
@@ -33,6 +33,7 @@
   --font-testo: var(--font-ui);
   --font-citazione: Georgia, "Iowan Old Style", "Times New Roman", serif;
   --font-numeri: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --font-display: Georgia, "Iowan Old Style", "Times New Roman", serif;
 
   --testo-base: 1.0625rem;
   --interlinea: 1.65;
@@ -198,18 +199,19 @@ html[data-tema="lettura"] .site-header {
 }
 
 .brand {
-  display: inline-flex; align-items: center; gap: 0.5rem;
+  display: inline-flex; align-items: center; gap: 0.55rem;
   color: var(--testo);
   font-family: var(--font-ui);
-  font-weight: 800; font-size: 0.95rem;
-  letter-spacing: 0.16em; text-transform: uppercase;
+  font-weight: 800; font-size: 1.08rem;
+  letter-spacing: 0.2em; text-transform: uppercase;
 }
 .brand:hover { color: var(--testo); }
 .brand b { color: var(--accento); font-weight: 800; }
 .brand svg {
-  width: 20px; height: 20px; flex: none;
-  stroke: var(--accento); stroke-width: 2.4; fill: none;
+  width: 25px; height: 23px; flex: none;
+  stroke: var(--accento); stroke-width: 2.3; fill: none;
 }
+.punto { color: var(--accento); }
 
 .menu-toggle { position: absolute; opacity: 0; pointer-events: none; }
 .menu-button {
@@ -257,12 +259,38 @@ html[data-tema="lettura"] .site-header {
   margin-bottom: 2.2rem;
 }
 .page-head h1, .hero h1 {
-  font-size: clamp(2.1rem, 5vw, 3.2rem);
-  letter-spacing: -0.035em;
-  line-height: 1.06;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.15rem, 5.2vw, 3.35rem);
+  letter-spacing: -0.03em;
+  line-height: 1.02;
   margin: 0 0 0.85rem;
 }
-.page-head h1 em, .hero h1 em { font-style: normal; color: var(--accento); }
+.page-head h1 em, .hero h1 em { font-style: italic; color: var(--accento); }
+
+/* Apertura della home: titolo da rivista, accento in corsivo */
+.home-hero {
+  padding-block: clamp(2.4rem, 6.5vw, 4.2rem) clamp(1.8rem, 4.5vw, 2.8rem);
+  border-bottom: 1px solid var(--bordo);
+  margin-bottom: 2.4rem;
+}
+.home-hero .kicker { margin-bottom: 1.1rem; }
+.home-hero h1 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.6rem, 7.6vw, 4.7rem);
+  line-height: 0.98;
+  letter-spacing: -0.035em;
+  max-width: 18ch;
+  margin: 0 0 1.15rem;
+}
+.home-hero h1 em { font-style: italic; color: var(--accento); }
+.home-hero p:not(.kicker) {
+  color: var(--testo-2);
+  font-size: clamp(1rem, 1.9vw, 1.16rem);
+  max-width: 52ch;
+  margin: 0;
+}
 .page-head p, .hero p {
   color: var(--testo-2);
   max-width: 64ch;
@@ -372,11 +400,14 @@ html[data-tema="lettura"] .site-header {
   box-shadow: var(--ombra);
 }
 .lead h2, .lead h3 {
-  font-size: clamp(1.85rem, 4.2vw, 2.75rem);
-  letter-spacing: -0.04em;
-  line-height: 1.06;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(1.9rem, 4.4vw, 2.9rem);
+  letter-spacing: -0.028em;
+  line-height: 1.02;
   margin: 0 0 0.85rem;
 }
+.lead h2 em, .lead h3 em { font-style: italic; color: var(--accento); }
 .lead h2 a, .lead h3 a { color: var(--testo); }
 .lead h2 a:hover, .lead h3 a:hover { color: var(--accento); }
 .lead p:not(.kicker):not(.meta) {
@@ -480,11 +511,14 @@ html[data-tema="lettura"] .site-header {
 }
 .articolo-categoria { margin: 0 0 0.9rem; }
 .articolo-titolo {
-  font-size: clamp(2rem, 5.4vw, 3.05rem);
-  letter-spacing: -0.04em;
-  line-height: 1.05;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(2.05rem, 5.6vw, 3.2rem);
+  letter-spacing: -0.028em;
+  line-height: 1.02;
   margin: 0 0 0.95rem;
 }
+.articolo-titolo em { font-style: italic; color: var(--accento); }
 .articolo-sottotitolo {
   font-family: var(--font-citazione);
   font-size: clamp(1.12rem, 2.6vw, 1.34rem);

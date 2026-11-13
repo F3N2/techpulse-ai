@@ -10,7 +10,7 @@ const parser = new XMLParser({
 
 const INTESTAZIONI = {
   "User-Agent":
-    "Mozilla/5.0 (compatible; TechpulseAI-Redazione/1.0; +https://github.com)",
+    "Mozilla/5.0 (compatible; Faro-Redazione/1.0; +https://github.com)",
   Accept: "*/*",
 };
 

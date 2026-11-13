@@ -7,7 +7,7 @@ pagination:
 permalink: "/{{ cat.slug }}/"
 eleventyComputed:
   titolo: "{{ cat.nome }}"
-  descrizione: "{{ cat.descrizione }} Gli articoli di TECHPULSE AI nella sezione {{ cat.nome }}."
+  descrizione: "{{ cat.descrizione }} Gli articoli di FARO nella sezione {{ cat.nome }}."
 ---
 {% set articoliCat = collections.articoli | perCategoria(cat.nome) %}
 

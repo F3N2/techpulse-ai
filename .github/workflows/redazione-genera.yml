@@ -46,7 +46,7 @@ jobs:
 
       - name: Salva bozze e archivio
         run: |
-          git config user.name "TECHPULSE AI - redazione"
+          git config user.name "FARO - redazione"
           git config user.email "redazione@users.noreply.github.com"
           git add _redazione
           if git diff --cached --quiet; then

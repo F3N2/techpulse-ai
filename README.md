@@ -1,6 +1,6 @@
-# techpulse-ai
+# FARO
 
-AI-powered technology news magazine — magazine italiano di tecnologia costruito con
+Magazine italiano sull'intelligenza artificiale, costruito con
 Eleventy e pubblicato su GitHub Pages, con una redazione automatica che propone
 almeno **4 articoli al giorno** e li pubblica **solo dopo la tua approvazione su Telegram**.
 

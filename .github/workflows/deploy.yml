@@ -1,4 +1,4 @@
-name: Build and deploy TECHPULSE AI
+name: Build and deploy FARO
 
 on:
   push:

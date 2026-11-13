@@ -1,7 +1,7 @@
-/* TECHPULSE AI — scelta del tema.
+/* FARO — scelta del tema.
    Nessuna raccolta dati: salva solo il nome del tema nel browser. */
 (function () {
-  var CHIAVE = "techpulse-tema";
+  var CHIAVE = "faro-tema";
   var TEMI = ["chiaro", "scuro", "lettura"];
   var scelto = null;
 
