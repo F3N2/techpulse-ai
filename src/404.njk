@@ -16,10 +16,10 @@ eleventyExcludeFromCollections: true
 
     <p class="errore-azioni">
       <a class="btn" href="{{ '/' | url }}">Torna alla home</a>
-      <a class="btn btn-fantasma" href="{{ '/ultime-notizie/' | url }}">Ultime notizie</a>
+      <a class="btn btn-secondario" href="{{ '/ultime-notizie/' | url }}">Ultime notizie</a>
     </p>
 
-    <h2 class="section-head mt-0">Oppure scegli una sezione</h2>
+    <h2 class="titoletto">Oppure scegli una sezione</h2>
     <ul class="errore-sezioni">
       {% for c in categorie %}
       <li><a href="{{ ('/' ~ c.slug ~ '/') | url }}">{{ c.nome }}</a></li>

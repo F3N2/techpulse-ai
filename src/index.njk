@@ -7,44 +7,56 @@ layout: base.njk
 {% if tutti.length %}
 
 <section class="container" aria-label="Notizie principali">
-  <div class="home-grid mt-1">
-    <article class="lead">
-      <p class="kicker">{{ inEvidenza.data.categoria }}</p>
-      <h2><a href="{{ inEvidenza.url | url }}">{{ inEvidenza.data.titolo }}</a></h2>
-      {% if inEvidenza.data.sottotitolo %}
-      <p>{{ inEvidenza.data.sottotitolo }}</p>
-      {% endif %}
-      <p class="meta">
+  <div class="prima-pagina">
+    <article class="apertura">
+      <a class="apertura-immagine illustrazione" href="{{ inEvidenza.url | url }}" tabindex="-1" aria-hidden="true">
+        {{ inEvidenza.data.id | illustrazione | safe }}
+      </a>
+      <p class="riga-meta">
+        <a class="categoria" href="{{ inEvidenza.data.categoria | urlCategoria | url }}">{{ inEvidenza.data.categoria }}</a>
         <time datetime="{{ inEvidenza.date | dataIso }}">{{ inEvidenza.date | dataIt }}</time>
       </p>
+      <h1 class="apertura-titolo"><a href="{{ inEvidenza.url | url }}">{{ inEvidenza.data.titolo }}</a></h1>
+      {% if inEvidenza.data.sottotitolo %}
+      <p class="apertura-sommario">{{ inEvidenza.data.sottotitolo }}</p>
+      {% endif %}
     </article>
 
-    <aside aria-label="Ultime notizie">
-      <h2 class="section-head mt-0">Ultime notizie</h2>
-      <ul class="lista">
-        {% for articolo in tutti %}
-          {% if loop.index > 1 and loop.index <= 7 %}
-        <li>
-          <p class="kicker">{{ articolo.data.categoria }}</p>
-          <a href="{{ articolo.url | url }}">{{ articolo.data.titolo }}</a>
-          <p class="meta">
-            <time datetime="{{ articolo.date | dataIso }}">{{ articolo.date | dataIt }}</time>
-          </p>
-        </li>
-          {% endif %}
-        {% endfor %}
-      </ul>
-      <p><a href="{{ '/ultime-notizie/' | url }}">Tutte le notizie →</a></p>
-    </aside>
+    <div class="secondarie">
+      {% for articolo in tutti %}
+        {% if loop.index > 1 and loop.index <= 3 %}
+      <article class="secondaria">
+        <p class="riga-meta">
+          <a class="categoria" href="{{ articolo.data.categoria | urlCategoria | url }}">{{ articolo.data.categoria }}</a>
+          <time datetime="{{ articolo.date | dataIso }}">{{ articolo.date | dataIt }}</time>
+        </p>
+        <h2 class="secondaria-titolo"><a href="{{ articolo.url | url }}">{{ articolo.data.titolo }}</a></h2>
+      </article>
+        {% endif %}
+      {% endfor %}
+    </div>
   </div>
 </section>
+
+{% if tutti.length > 3 %}
+<section class="container" aria-labelledby="ultime">
+  <h2 class="titoletto" id="ultime">Ultime notizie</h2>
+  <ul class="elenco">
+    {% for articolo in tutti %}
+      {% if loop.index > 3 and loop.index <= 9 %}
+        {% include "card-articolo.njk" %}
+      {% endif %}
+    {% endfor %}
+  </ul>
+  <p class="altre"><a href="{{ '/ultime-notizie/' | url }}">Tutte le notizie</a></p>
+</section>
+{% endif %}
 
 {% else %}
 
 <section class="container">
-  <div class="home-hero">
-    <p class="kicker">Il magazine italiano sull'intelligenza artificiale</p>
-    <h1>L'AI, <em>spiegata.</em></h1>
+  <div class="page-head">
+    <h1>L'AI, spiegata.</h1>
     <p>{{ site.nome }} sceglie ogni giorno le notizie tecnologiche che contano, le verifica sulle fonti originali e le racconta in italiano, senza rumore.</p>
   </div>
   <div class="stato-vuoto">
@@ -57,20 +69,3 @@ layout: base.njk
 </section>
 
 {% endif %}
-
-{% for c in categorie %}
-  {% set articoliCat = tutti | perCategoria(c.nome) %}
-  {% if articoliCat.length %}
-<section class="container" aria-labelledby="sezione-{{ c.slug }}">
-  <h2 class="section-head" id="sezione-{{ c.slug }}">{{ c.nome }}</h2>
-  <div class="grid">
-    {% for articolo in articoliCat %}
-      {% if loop.index <= 3 %}
-        {% include "card-articolo.njk" %}
-      {% endif %}
-    {% endfor %}
-  </div>
-  <p><a href="{{ ('/' ~ c.slug ~ '/') | url }}">Tutti gli articoli: {{ c.nome }} →</a></p>
-</section>
-  {% endif %}
-{% endfor %}

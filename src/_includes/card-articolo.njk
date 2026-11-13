@@ -1,10 +1,15 @@
-<article class="card">
-  <p class="kicker">{{ articolo.data.categoria }}</p>
-  <h3><a href="{{ articolo.url | url }}">{{ articolo.data.titolo }}</a></h3>
-  {% if articolo.data.sottotitolo %}
-  <p>{{ articolo.data.sottotitolo }}</p>
-  {% endif %}
-  <p class="meta">
-    <time datetime="{{ articolo.date | dataIso }}">{{ articolo.date | dataIt }}</time>
-  </p>
-</article>
+<li class="riga">
+  <a class="riga-immagine illustrazione" href="{{ articolo.url | url }}" tabindex="-1" aria-hidden="true">
+    {{ articolo.data.id | illustrazione | safe }}
+  </a>
+  <div class="riga-testo">
+    <p class="riga-meta">
+      <a class="categoria" href="{{ articolo.data.categoria | urlCategoria | url }}">{{ articolo.data.categoria }}</a>
+      <time datetime="{{ articolo.date | dataIso }}">{{ articolo.date | dataIt }}</time>
+    </p>
+    <h3 class="riga-titolo"><a href="{{ articolo.url | url }}">{{ articolo.data.titolo }}</a></h3>
+    {% if articolo.data.sottotitolo %}
+    <p class="riga-sommario">{{ articolo.data.sottotitolo }}</p>
+    {% endif %}
+  </div>
+</li>

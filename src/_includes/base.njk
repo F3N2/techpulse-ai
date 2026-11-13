@@ -2,13 +2,13 @@
 <html lang="{{ site.lingua }}" data-tema="scuro">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
   <script src="{{ '/assets/js/tema.js' | url }}?v={{ '/assets/js/tema.js' | impronta }}"></script>
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <title>{% if titolo %}{{ titolo }} · {% elif page.filePathStem | nomeCartella %}{{ page.filePathStem | nomeCartella }} · {% endif %}{{ site.nome }}</title>
   <meta name="description" content="{{ descrizione or site.descrizione }}">
-  <meta name="theme-color" content="#101010">
+  <meta name="theme-color" content="#0B100A">
   <link rel="icon" type="image/svg+xml" href="{{ '/assets/favicon.svg' | url }}">
   <meta property="og:site_name" content="{{ site.nome }}">
   <meta property="og:locale" content="it_IT">
@@ -16,29 +16,42 @@
   <meta property="og:title" content="{{ titolo or site.nome }}">
   <meta property="og:description" content="{{ descrizione or site.descrizione }}">
   <link rel="canonical" href="{{ site.url }}{{ page.url }}">
+  <link rel="stylesheet" href="{{ '/assets/css/fonts.css' | url }}?v={{ '/assets/css/fonts.css' | impronta }}">
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | url }}?v={{ '/assets/css/style.css' | impronta }}">
 </head>
 <body>
   <a class="skip" href="#contenuto">Vai al contenuto</a>
 
-  <header class="site-header">
-    <div class="container header-inner">
-      <a class="brand" href="{{ '/' | url }}" aria-label="{{ site.nome }} – Home">
-        <svg viewBox="0 0 26 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" aria-hidden="true"><circle cx="6" cy="12" r="3.3"/><path d="M12.4 5.6 17 2.7M12.4 12h9.6M12.4 18.4 17 21.3"/></svg>
-        <span>NEXORA<b>.</b></span>
+  <header class="testata">
+    <div class="container testata-interno">
+      <a class="marchio" href="{{ '/' | url }}" aria-label="{{ site.nome }} – Home">
+        <svg class="marchio-icona" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M4.5 19.5c0-8.5 4.5-14 14-15.5.5 9.5-4 15-11 15"/>
+          <path d="M4.5 19.5c3.5-1.5 6.5-4.5 8.5-8"/>
+        </svg>
+        <span>{{ site.nome }}</span>
       </a>
 
-      <input type="checkbox" id="menu-toggle" class="menu-toggle" aria-label="Apri o chiudi il menu">
-      <label for="menu-toggle" class="menu-button" aria-hidden="true"><span></span><span></span><span></span></label>
-
-      <nav class="nav" aria-label="Navigazione principale">
-        <a href="{{ '/' | url }}">Home</a>
-        <a href="{{ '/ultime-notizie/' | url }}">Ultime notizie</a>
+      <nav class="sezioni" aria-label="Sezioni del sito">
+        <a href="{{ '/' | url }}" {% if page.url == "/" %}aria-current="page"{% endif %}>Home</a>
         {% for c in categorie %}
-        <a href="{{ ('/' ~ c.slug ~ '/') | url }}">{{ c.nome }}</a>
+        <a href="{{ ('/' ~ c.slug ~ '/') | url }}" {% if page.url == ('/' ~ c.slug ~ '/') %}aria-current="page"{% endif %}>{{ c.nome }}</a>
         {% endfor %}
-        <a href="{{ '/tool/' | url }}">Tool</a>
+        <a href="{{ '/tool/' | url }}" {% if page.url == "/tool/" %}aria-current="page"{% endif %}>Tool</a>
       </nav>
+
+      <div class="azioni">
+        <button class="tema-toggle" id="tema-toggle" type="button" aria-pressed="false" aria-label="Passa al tema chiaro" title="Passa al tema chiaro">
+          <svg class="icona-sole" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
+          </svg>
+          <svg class="icona-luna" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
+          </svg>
+        </button>
+        <a class="btn" href="{{ '/ultime-notizie/' | url }}">Ultime notizie</a>
+      </div>
     </div>
   </header>
 
@@ -47,55 +60,35 @@
   </main>
 
   <footer class="site-footer">
+    <div class="container footer-grid">
+      <div>
+        <p class="footer-nome">{{ site.nome }}</p>
+        <p>{{ site.descrizione }}</p>
+      </div>
+      <div>
+        <p class="footer-titolo">Sezioni</p>
+        <ul>
+          <li><a href="{{ '/ultime-notizie/' | url }}">Ultime notizie</a></li>
+          <li><a href="{{ '/tool/' | url }}">Tool</a></li>
+          {% for c in categorie %}
+          <li><a href="{{ ('/' ~ c.slug ~ '/') | url }}">{{ c.nome }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div>
+        <p class="footer-titolo">Informazioni</p>
+        <ul>
+          <li><a href="{{ '/chi-siamo/' | url }}">Chi siamo</a></li>
+          <li><a href="{{ '/contatti/' | url }}">Contatti</a></li>
+          <li><a href="{{ '/privacy-policy/' | url }}">Privacy Policy</a></li>
+          <li><a href="{{ '/cookie-policy/' | url }}">Cookie Policy</a></li>
+          <li><a href="{{ '/termini-e-condizioni/' | url }}">Termini e condizioni</a></li>
+          <li><a href="{{ '/informativa-ai/' | url }}">Uso dell'intelligenza artificiale</a></li>
+        </ul>
+      </div>
+    </div>
     <div class="container">
-      <div class="footer-grid">
-        <div>
-          <h4>{{ site.nome }}<span class="punto">.</span></h4>
-          <p>{{ site.descrizione }}</p>
-        </div>
-        <div>
-          <h4>Sezioni</h4>
-          <ul>
-            <li><a href="{{ '/ultime-notizie/' | url }}">Ultime notizie</a></li>
-            <li><a href="{{ '/tool/' | url }}">Tool</a></li>
-            {% for c in categorie %}
-            <li><a href="{{ ('/' ~ c.slug ~ '/') | url }}">{{ c.nome }}</a></li>
-            {% endfor %}
-          </ul>
-        </div>
-        <div>
-          <h4>Informazioni</h4>
-          <ul>
-            <li><a href="{{ '/chi-siamo/' | url }}">Chi siamo</a></li>
-            <li><a href="{{ '/contatti/' | url }}">Contatti</a></li>
-            <li><a href="{{ '/privacy-policy/' | url }}">Privacy Policy</a></li>
-            <li><a href="{{ '/cookie-policy/' | url }}">Cookie Policy</a></li>
-            <li><a href="{{ '/termini-e-condizioni/' | url }}">Termini e condizioni</a></li>
-            <li><a href="{{ '/informativa-ai/' | url }}">Uso dell'intelligenza artificiale</a></li>
-          </ul>
-        </div>
-      </div>
-      <div class="footer-strumenti">
-        <fieldset class="tema">
-          <legend>Tema di lettura</legend>
-          <label class="tema-opzione">
-            <input type="radio" name="tema" value="chiaro" id="tema-chiaro">
-            <span>Chiaro</span>
-          </label>
-          <label class="tema-opzione">
-            <input type="radio" name="tema" value="scuro" id="tema-scuro" checked>
-            <span>Scuro</span>
-          </label>
-          <label class="tema-opzione">
-            <input type="radio" name="tema" value="lettura" id="tema-lettura">
-            <span>Lettura</span>
-          </label>
-        </fieldset>
-        <p class="tema-nota">La scelta resta salvata su questo browser.</p>
-      </div>
-
       {% include "dati-titolare.njk" %}
-
       <p class="footer-note">
         Gli articoli sono redatti con l'ausilio dell'intelligenza artificiale e
         approvati prima della pubblicazione. Le fonti sono sempre indicate.

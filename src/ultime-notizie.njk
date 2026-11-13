@@ -13,11 +13,11 @@ descrizione: "Tutti gli articoli di NEXORA su intelligenza artificiale e tecnolo
   </div>
 
   {% if collections.articoli.length %}
-  <div class="grid">
+  <ul class="elenco">
     {% for articolo in collections.articoli %}
       {% include "card-articolo.njk" %}
     {% endfor %}
-  </div>
+  </ul>
   {% else %}
   <div class="stato-vuoto">
     <h2>Nessun articolo pubblicato</h2>
@@ -25,7 +25,7 @@ descrizione: "Tutti gli articoli di NEXORA su intelligenza artificiale e tecnolo
       Stiamo preparando i primi contenuti. Ogni articolo viene pubblicato
       solo dopo una verifica e un'approvazione della redazione.
     </p>
-    <p><a class="btn" href="{{ '/' | url }}">Torna alla homepage</a></p>
+    <p><a class="btn btn-secondario" href="{{ '/' | url }}">Torna alla homepage</a></p>
   </div>
   {% endif %}
 </section>

@@ -203,8 +203,8 @@ note_verifica: "Cosa è confermato e cosa resta da verificare."
 Testo dell'articolo in markdown.
 ```
 
-`punti_chiave` è facoltativo e diventa il riquadro «In breve» nella colonna
-laterale dell'articolo. La pagina si impagina da sola: briciole di navigazione,
+`punti_chiave` è facoltativo e diventa il riquadro «In breve» sopra il corpo
+dell'articolo. La pagina si impagina da sola: briciole di navigazione,
 data e tempo di lettura nella testata, fonti numerate, articoli correlati della
 stessa categoria e i link all'articolo precedente e successivo.
 
@@ -314,7 +314,7 @@ Cosa fa il progetto:
   stile `sk-…`, token di bot, token GitHub e chiavi private in `src/`, `_redazione/` e
   `_site/`, e verifica che nessun file della redazione finisca nel sito pubblicato.
 - **Il sito carica un solo script locale**, `src/assets/js/tema.js` (circa 1 KB), che
-  serve a ricordare la modalità di lettura scelta e salva solo quel valore nel
+  serve a ricordare il tema scelto (chiaro o scuro) e salva solo quel valore nel
   `localStorage`. La Content-Security-Policy dichiarata in `src/_includes/base.njk`
   ammette script solo dallo stesso dominio: nessuna risorsa di terze parti, nessun
   iframe, nessun font o immagine esterna, nessuno stile inline.

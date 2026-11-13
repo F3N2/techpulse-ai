@@ -3,6 +3,7 @@ const path = require("path");
 const crypto = require("crypto");
 const markdownIt = require("markdown-it");
 const CATEGORIE = require("./src/_data/categorie.json");
+const { generaIllustrazione } = require("./scripts/lib/illustrazioni");
 
 // Il sito è un sito di progetto di GitHub Pages: il percorso pubblico segue il
 // nome del repository, quindi un rename non richiede modifiche al codice.
@@ -123,6 +124,9 @@ module.exports = function (eleventyConfig) {
   eleventyConfig.on("eleventy.before", () => {
     controllaArticoli();
   });
+
+  // Illustrazione a curve di livello, diversa per ogni articolo.
+  eleventyConfig.addFilter("illustrazione", (seme) => generaIllustrazione(seme));
 
   eleventyConfig.addFilter("dataIt", (d) =>
     new Intl.DateTimeFormat("it-IT", {

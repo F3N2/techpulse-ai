@@ -11,27 +11,27 @@ eleventyComputed:
 ---
 {% set articoliCat = collections.articoli | perCategoria(cat.nome) %}
 
-<section class="hero container fade-in">
-  <h1>{{ cat.nome }}</h1>
-  <p>{{ cat.descrizione }}</p>
-</section>
-
 <section class="container">
+  <div class="page-head">
+    <h1>{{ cat.nome }}</h1>
+    <p>{{ cat.descrizione }}</p>
+  </div>
+
   {% if articoliCat.length %}
-  <div class="grid">
+  <ul class="elenco">
     {% for articolo in articoliCat %}
       {% include "card-articolo.njk" %}
     {% endfor %}
-  </div>
+  </ul>
   {% else %}
-  <div class="card stato-vuoto fade-in">
+  <div class="stato-vuoto">
     <h2>Nessun articolo in questa sezione</h2>
     <p>
       Non abbiamo ancora pubblicato articoli su questo tema. Ogni articolo
       viene pubblicato solo dopo una verifica e un'approvazione della redazione.
     </p>
     <p>
-      <a class="btn" href="{{ '/ultime-notizie/' | url }}">
+      <a class="btn btn-secondario" href="{{ '/ultime-notizie/' | url }}">
         Vai alle ultime notizie
       </a>
     </p>

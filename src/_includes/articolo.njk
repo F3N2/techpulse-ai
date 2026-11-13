@@ -7,118 +7,101 @@ layout: base.njk
 
 <article class="articolo">
 
-  <header class="articolo-testata">
-    <nav class="briciole" aria-label="Percorso di navigazione">
-      <a href="{{ '/' | url }}">Home</a>
-      <span aria-hidden="true">/</span>
-      <a href="{{ categoria | urlCategoria | url }}">{{ categoria }}</a>
-    </nav>
+  <div class="container">
+    <header class="articolo-testata">
+      <p class="riga-meta articolo-meta">
+        <a class="categoria" href="{{ categoria | urlCategoria | url }}">{{ categoria }}</a>
+        <time datetime="{{ page.date | dataIso }}">{{ page.date | dataIt }}</time>
+        <span>{{ lettura }}</span>
+      </p>
+      <h1 class="articolo-titolo">{{ titolo }}</h1>
+      {% if sottotitolo %}
+      <p class="articolo-sommario">{{ sottotitolo }}</p>
+      {% endif %}
+    </header>
 
-    <p class="kicker articolo-categoria">{{ categoria }}</p>
-    <h1 class="articolo-titolo">{{ titolo }}</h1>
-    {% if sottotitolo %}
-    <p class="articolo-sottotitolo">{{ sottotitolo }}</p>
+    <figure class="articolo-immagine illustrazione">
+      {{ id | illustrazione | safe }}
+    </figure>
+
+    {% if punti_chiave and punti_chiave.length %}
+    <aside class="articolo-punti finestra" aria-label="Punti chiave">
+      <h2>In breve</h2>
+      <ul>
+        {% for punto in punti_chiave %}
+        <li>{{ punto }}</li>
+        {% endfor %}
+      </ul>
+    </aside>
     {% endif %}
 
-    <p class="articolo-meta">
-      <time datetime="{{ page.date | dataIso }}">{{ page.date | dataIt }}</time>
-      <span class="separatore" aria-hidden="true">·</span>
-      <span>{{ lettura }}</span>
-    </p>
-  </header>
-
-  <div class="articolo-piano">
-    <div class="articolo-principale">
-      <div class="prose articolo-corpo">
-        {{ content | safe }}
-      </div>
-
-      {% if note_verifica %}
-      <aside class="articolo-box articolo-avviso" aria-label="Nota sulla verifica delle informazioni">
-        <h2>Nota sulla verifica</h2>
-        <p>{{ note_verifica }}</p>
-      </aside>
-      {% endif %}
-
-      {% if fonti and fonti.length %}
-      <section class="articolo-fonti" aria-labelledby="titolo-fonti">
-        <h2 id="titolo-fonti">Fonti consultate</h2>
-        <ol>
-          {% for fonte in fonti %}
-          <li>
-            {% if fonte.url and (fonte.url.startsWith("https://") or fonte.url.startsWith("http://")) %}
-            <a href="{{ fonte.url }}" target="_blank" rel="noopener noreferrer">{{ fonte.titolo or fonte.url }}</a>
-            {% else %}
-            {{ fonte.titolo }}
-            {% endif %}
-          </li>
-          {% endfor %}
-        </ol>
-      </section>
-      {% endif %}
+    <div class="prose articolo-corpo">
+      {{ content | safe }}
     </div>
 
-    <aside class="articolo-laterale" aria-label="Scheda dell'articolo">
-      {% if punti_chiave and punti_chiave.length %}
-      <section class="articolo-box articolo-punti">
-        <h2>In breve</h2>
-        <ul>
-          {% for punto in punti_chiave %}
-          <li>{{ punto }}</li>
-          {% endfor %}
-        </ul>
-      </section>
-      {% endif %}
+    {% if fonti and fonti.length %}
+    <section class="fonti" aria-labelledby="titolo-fonti">
+      <h2 id="titolo-fonti">Fonti consultate</h2>
+      <ol>
+        {% for fonte in fonti %}
+        <li>
+          {% if fonte.url and (fonte.url.startsWith("https://") or fonte.url.startsWith("http://")) %}
+          <a href="{{ fonte.url }}" target="_blank" rel="noopener noreferrer">{{ fonte.titolo or fonte.url }}</a>
+          {% else %}
+          {{ fonte.titolo }}
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ol>
+    </section>
+    {% endif %}
 
-      <dl class="articolo-scheda">
-        <dt>Sezione</dt>
-        <dd><a href="{{ categoria | urlCategoria | url }}">{{ categoria }}</a></dd>
-        <dt>Pubblicato</dt>
-        <dd><time datetime="{{ page.date | dataIso }}">{{ page.date | dataIt }}</time></dd>
-        <dt>Lettura</dt>
-        <dd>{{ lettura }}</dd>
-      </dl>
-
-      <aside class="articolo-box articolo-ai" aria-label="Trasparenza sull'uso dell'intelligenza artificiale">
-        <p>
-          Articolo redatto con l'ausilio dell'intelligenza artificiale a partire
-          dalle fonti indicate e approvato prima della pubblicazione.
-          <a href="{{ '/informativa-ai/' | url }}">Come usiamo l'AI</a>.
-        </p>
-      </aside>
+    {% if note_verifica %}
+    <aside class="finestra articolo-verifica" aria-label="Nota sulla verifica delle informazioni">
+      <h2>Nota sulla verifica</h2>
+      <p>{{ note_verifica }}</p>
     </aside>
+    {% endif %}
+
+    <aside class="nota-ai" aria-label="Trasparenza sull'uso dell'intelligenza artificiale">
+      <p>
+        Articolo redatto con l'ausilio dell'intelligenza artificiale a partire dalle
+        fonti indicate e approvato prima della pubblicazione.
+        <a href="{{ '/informativa-ai/' | url }}">Come usiamo l'AI</a>.
+      </p>
+    </aside>
+
+    {% if vicini.precedente or vicini.successivo %}
+    <nav class="vicini" aria-label="Articoli in sequenza">
+      {% if vicini.precedente %}
+      <a class="vicino" href="{{ vicini.precedente.url | url }}">
+        <span class="vicino-etichetta">Articolo precedente</span>
+        <span class="vicino-titolo">{{ vicini.precedente.data.titolo }}</span>
+      </a>
+      {% endif %}
+      {% if vicini.successivo %}
+      <a class="vicino" href="{{ vicini.successivo.url | url }}">
+        <span class="vicino-etichetta">Articolo successivo</span>
+        <span class="vicino-titolo">{{ vicini.successivo.data.titolo }}</span>
+      </a>
+      {% endif %}
+    </nav>
+    {% endif %}
+
+    <p class="articolo-indietro">
+      <a class="btn btn-secondario" href="{{ '/ultime-notizie/' | url }}">Tutte le notizie</a>
+    </p>
   </div>
 
-  {% if vicini.precedente or vicini.successivo %}
-  <nav class="articolo-vicini" aria-label="Articoli in sequenza">
-    {% if vicini.precedente %}
-    <a class="vicino" href="{{ vicini.precedente.url | url }}">
-      <span class="vicino-etichetta">← Articolo precedente</span>
-      <span class="vicino-titolo">{{ vicini.precedente.data.titolo }}</span>
-    </a>
-    {% endif %}
-    {% if vicini.successivo %}
-    <a class="vicino vicino-destra" href="{{ vicini.successivo.url | url }}">
-      <span class="vicino-etichetta">Articolo successivo →</span>
-      <span class="vicino-titolo">{{ vicini.successivo.data.titolo }}</span>
-    </a>
-    {% endif %}
-  </nav>
-  {% endif %}
-
   {% if correlati.length %}
-  <section class="articolo-correlati" aria-labelledby="titolo-correlati">
-    <h2 class="section-head" id="titolo-correlati">Continua a leggere</h2>
-    <div class="grid">
+  <section class="container correlati" aria-labelledby="correlati">
+    <h2 class="titoletto" id="correlati">Continua a leggere</h2>
+    <ul class="elenco">
       {% for articolo in correlati %}
         {% include "card-articolo.njk" %}
       {% endfor %}
-    </div>
+    </ul>
   </section>
   {% endif %}
-
-  <p class="articolo-indietro">
-    <a class="btn btn-fantasma" href="{{ '/ultime-notizie/' | url }}">← Tutte le notizie</a>
-  </p>
 
 </article>
