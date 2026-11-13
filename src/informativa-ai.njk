@@ -1,0 +1,95 @@
+---
+layout: base.njk
+titolo: "Uso dell'intelligenza artificiale"
+descrizione: "Come TECHPULSE AI usa l'intelligenza artificiale: raccolta delle fonti, selezione, scrittura, revisione umana e limiti del processo."
+---
+<section class="container">
+  <div class="page-head">
+    <h1>Uso dell'intelligenza artificiale</h1>
+    <p>
+      Come lavoriamo, cosa fa la macchina e cosa decide una persona.
+      Ultimo aggiornamento: {{ site.ultimoAggiornamentoLegale }}.
+    </p>
+  </div>
+
+  <div class="prose">
+    {% include "avviso-dati.njk" %}
+
+    <h2>In breve</h2>
+    <p>
+      Ogni articolo di TECHPULSE AI è redatto con l'ausilio dell'intelligenza artificiale
+      e <strong>approvato da una persona</strong> prima della pubblicazione. Le fonti sono
+      sempre indicate con il link all'originale. Nessun articolo viene pubblicato in modo
+      automatico.
+    </p>
+
+    <h2>Come funziona il processo</h2>
+    <ol>
+      <li>
+        <strong>Raccolta.</strong> Un programma legge i feed pubblici delle fonti
+        elencate nella sezione "Chi siamo" e nelle fonti di ogni articolo.
+      </li>
+      <li>
+        <strong>Selezione.</strong> Un modello di intelligenza artificiale sceglie le
+        notizie più rilevanti, scartando duplicati, contenuti promozionali e temi fuori
+        argomento.
+      </li>
+      <li>
+        <strong>Scrittura.</strong> Lo stesso modello scrive una bozza in italiano a
+        partire dal titolo e dal sommario della notizia originale, senza copiare il testo
+        della fonte.
+      </li>
+      <li>
+        <strong>Controlli automatici.</strong> La bozza viene rifiutata se manca la fonte,
+        se la categoria non esiste, se il testo è troppo breve o troppo lungo o se manca
+        la nota di verifica.
+      </li>
+      <li>
+        <strong>Revisione umana.</strong> La bozza arriva a una persona, che la legge e
+        decide se pubblicarla o scartarla. Solo dopo l'approvazione l'articolo compare sul
+        sito.
+      </li>
+    </ol>
+
+    <h2>Cosa può sbagliare</h2>
+    <p>
+      I modelli linguistici possono introdurre imprecisioni, semplificazioni o dettagli
+      non presenti nella fonte. Per limitare il rischio, al modello viene chiesto di usare
+      soltanto le informazioni fornite e di non inventare dati, cifre, citazioni o nomi; la
+      nota di verifica in calce a ogni articolo indica cosa è confermato e cosa resta da
+      verificare. Se noti un errore, segnalalo:
+      <a href="mailto:{{ site.email }}">{{ site.email }}</a>.
+    </p>
+
+    <h2>Trasparenza e assunzione di responsabilità editoriale</h2>
+    <p>
+      Ogni articolo riporta una dichiarazione esplicita dell'uso dell'AI, così che chi
+      legge sappia sempre come è stato prodotto il testo. La revisione e l'approvazione
+      prima della pubblicazione comportano una responsabilità editoriale umana sul
+      contenuto pubblicato: il processo non prevede pubblicazione automatica di testi non
+      esaminati.
+    </p>
+    <p>
+      Questa impostazione è coerente con gli obblighi di trasparenza previsti
+      dall'articolo 50 del Regolamento (UE) 2024/1689 (AI Act), applicabili dal 2 agosto
+      2026, che richiedono di rendere riconoscibile il testo generato dall'AI pubblicato
+      per informare il pubblico su temi di interesse pubblico.
+    </p>
+
+    <h2>Quali strumenti usiamo</h2>
+    <p>
+      Il modello utilizzato è un servizio esterno con API compatibile OpenAI, configurato
+      dal titolare del sito. Il modello può essere cambiato nel tempo senza modificare il
+      processo descritto. Le notizie non vengono inviate a servizi diversi da quello
+      scelto per la scrittura.
+    </p>
+
+    <h2>Ciò che non facciamo</h2>
+    <ul>
+      <li>Non pubblichiamo contenuti senza revisione umana.</li>
+      <li>Non copiamo né ripubblichiamo integralmente articoli di altre testate.</li>
+      <li>Non generiamo immagini, audio o video con l'AI, né voci sintetiche.</li>
+      <li>Non usiamo l'AI per creare contenuti su persone reali senza una fonte verificabile.</li>
+    </ul>
+  </div>
+</section>

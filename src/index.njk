@@ -7,7 +7,7 @@ layout: base.njk
 {% if tutti.length %}
 
 <section class="container" aria-label="Notizie principali">
-  <div class="home-grid" style="margin-top:1.5rem">
+  <div class="home-grid mt-1">
     <article class="lead">
       <p class="kicker">{{ inEvidenza.data.categoria }}</p>
       <h2><a href="{{ inEvidenza.url | url }}">{{ inEvidenza.data.titolo }}</a></h2>
@@ -20,7 +20,7 @@ layout: base.njk
     </article>
 
     <aside aria-label="Ultime notizie">
-      <h2 class="section-head" style="margin-top:0">Ultime notizie</h2>
+      <h2 class="section-head mt-0">Ultime notizie</h2>
       <ul class="lista">
         {% for articolo in tutti %}
           {% if loop.index > 1 and loop.index <= 7 %}

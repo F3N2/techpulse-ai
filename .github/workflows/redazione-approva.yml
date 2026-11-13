@@ -1,0 +1,105 @@
+name: Redazione AI - approvazioni e pubblicazione
+
+on:
+  schedule:
+    # Telegram non può chiamare GitHub: si controllano le risposte ogni 15 minuti
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+  actions: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  approva:
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+
+    steps:
+      - name: Scarica il repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configura Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installa le dipendenze
+        run: npm install --no-audit --no-fund
+
+      - name: Leggi le approvazioni da Telegram
+        id: gestione
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SITO_URL: ${{ vars.SITO_URL }}
+        run: node scripts/gestisci-approvazioni.js
+
+      # Il sito viene costruito prima del commit: se un articolo non passa i
+      # controlli di Eleventy, non arriva mai su main.
+      - name: Costruisce il sito
+        if: steps.gestione.outputs.pubblicato == 'true'
+        run: npm run build
+
+      - name: Prepara i file per GitHub Pages
+        if: steps.gestione.outputs.pubblicato == 'true'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Controllo di sicurezza
+        run: npm run sicurezza
+
+      - name: Salva gli articoli approvati
+        if: steps.gestione.outputs.modifiche == 'true'
+        run: |
+          git config user.name "TECHPULSE AI - redazione"
+          git config user.email "redazione@users.noreply.github.com"
+          git add _redazione src/articoli
+          if git diff --cached --quiet; then
+            echo "Nessuna modifica da salvare."
+            exit 0
+          fi
+          git commit -m "redazione: articoli approvati dalla redazione"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push
+
+      - name: Pubblica il sito
+        id: deploy
+        if: steps.gestione.outputs.pubblicato == 'true'
+        uses: actions/deploy-pages@v4
+
+      # Se hai appena inserito la chiave API da Telegram, non aspettare il cron:
+      # avvia subito una generazione di bozze.
+      - name: Avvia subito la generazione
+        if: steps.gestione.outputs.chiaveInserita == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          curl -sS -o /dev/null -X POST \
+            -H "Authorization: Bearer ${GH_TOKEN}" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/redazione-genera.yml/dispatches" \
+            -d "{\"ref\": \"${GITHUB_REF_NAME}\"}" || true
+
+      - name: Avvisa su Telegram in caso di errore
+        if: failure()
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          curl -sS -o /dev/null -X POST \
+            "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${TELEGRAM_CHAT_ID}" \
+            --data-urlencode "text=⚠️ Redazione AI: la pubblicazione non è riuscita. Controlla il log su GitHub Actions." || true

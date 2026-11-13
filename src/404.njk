@@ -1,0 +1,29 @@
+---
+layout: base.njk
+titolo: "Pagina non trovata"
+descrizione: "La pagina che stai cercando non esiste o è stata spostata. Torna alla home o sfoglia le sezioni di TECHPULSE AI."
+permalink: "/404.html"
+eleventyExcludeFromCollections: true
+---
+<section class="container">
+  <div class="errore">
+    <p class="errore-codice">404</p>
+    <h1>Questa pagina non esiste</h1>
+    <p>
+      Il link può essere sbagliato, oppure il contenuto è stato spostato o rimosso.
+      Non è un problema tuo: succede.
+    </p>
+
+    <p class="errore-azioni">
+      <a class="btn" href="{{ '/' | url }}">Torna alla home</a>
+      <a class="btn btn-fantasma" href="{{ '/ultime-notizie/' | url }}">Ultime notizie</a>
+    </p>
+
+    <h2 class="section-head mt-0">Oppure scegli una sezione</h2>
+    <ul class="errore-sezioni">
+      {% for c in categorie %}
+      <li><a href="{{ ('/' ~ c.slug ~ '/') | url }}">{{ c.nome }}</a></li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>

@@ -1,0 +1,8 @@
+{% set voci = [] %}
+{% if site.titolare and site.titolare != "DA_COMPLETARE" %}{% set voci = (voci.push(site.titolare), voci) %}{% endif %}
+{% if site.sedeLegale %}{% set voci = (voci.push("Sede legale: " + site.sedeLegale), voci) %}{% endif %}
+{% if site.partitaIva %}{% set voci = (voci.push("P. IVA " + site.partitaIva), voci) %}{% endif %}
+{% if site.numeroRea %}{% set voci = (voci.push("REA " + site.numeroRea), voci) %}{% endif %}
+{% if voci.length %}
+<p class="dati-titolare">{{ voci | join(" · ") }}</p>
+{% endif %}

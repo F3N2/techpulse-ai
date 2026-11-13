@@ -1,0 +1,105 @@
+---
+layout: base.njk
+titolo: "Privacy Policy"
+descrizione: "Informativa sul trattamento dei dati personali di TECHPULSE AI ai sensi del Regolamento UE 2016/679 (GDPR)."
+---
+<section class="container">
+  <div class="page-head">
+    <h1>Privacy Policy</h1>
+    <p>
+      Informativa ai sensi degli articoli 13 e 14 del Regolamento UE 2016/679 (GDPR).
+      Ultimo aggiornamento: {{ site.ultimoAggiornamentoLegale }}.
+    </p>
+  </div>
+
+  <div class="prose">
+    {% include "avviso-dati.njk" %}
+
+    <h2>Titolare del trattamento</h2>
+    <p>
+      {{ site.titolare }}, contattabile all'indirizzo
+      <a href="mailto:{{ site.email }}">{{ site.email }}</a>.
+    </p>
+    {% include "dati-titolare.njk" %}
+
+    <h2>Quali dati raccogliamo</h2>
+    <p>
+      Il sito è statico e non prevede registrazione, moduli di contatto, commenti,
+      newsletter o aree riservate. Non impostiamo cookie e non usiamo strumenti di
+      analisi statistica, profilazione o pubblicità. Di conseguenza, navigando il sito
+      non raccogliamo direttamente dati personali.
+    </p>
+    <p>
+      L'unico caso in cui trattiamo dati è quello in cui ci scrivi: in quel momento
+      riceviamo il tuo indirizzo email e il contenuto del messaggio.
+    </p>
+
+    <h2>Preferenza del tema</h2>
+    <p>
+      Il sito salva nel browser, nella memoria locale (<em>localStorage</em>), solo la
+      modalità di lettura scelta. È un'informazione tecnica priva di dati personali, resta
+      sul tuo dispositivo e non ci viene trasmessa in alcun modo.
+    </p>
+
+    <h2>Hosting e log tecnici</h2>
+    <p>
+      Il sito è pubblicato tramite GitHub Pages, servizio fornito da GitHub, Inc. Come
+      qualsiasi servizio di hosting, GitHub può registrare dati tecnici di connessione
+      (ad esempio indirizzo IP, data e ora della richiesta, pagina richiesta, tipo di
+      browser) per finalità di sicurezza e funzionamento del servizio, secondo le
+      proprie informative. Tali dati non sono accessibili alla redazione e non vengono
+      da noi utilizzati per identificare le persone.
+    </p>
+
+    <h2>Finalità e base giuridica</h2>
+    <ul>
+      <li>
+        Rispondere ai messaggi ricevuti: esecuzione di misure precontrattuali o
+        legittimo interesse a gestire le comunicazioni (art. 6, par. 1, lett. b e f
+        GDPR).
+      </li>
+      <li>
+        Adempiere a obblighi di legge, comprese le richieste di rettifica o di replica
+        (art. 6, par. 1, lett. c GDPR).
+      </li>
+    </ul>
+
+    <h2>Conservazione</h2>
+    <p>
+      I messaggi ricevuti vengono conservati per il tempo necessario a gestire la
+      richiesta e, se la comunicazione riguarda un contenuto pubblicato, per il tempo in
+      cui l'articolo resta online.
+    </p>
+
+    <h2>Comunicazione a terzi</h2>
+    <p>
+      Non vendiamo né cediamo dati personali. I dati possono essere trattati dai
+      fornitori tecnici necessari al funzionamento del sito (hosting) nella loro qualità
+      di responsabili del trattamento.
+    </p>
+
+    <h2>I tuoi diritti</h2>
+    <p>
+      Puoi chiedere in ogni momento l'accesso ai tuoi dati, la rettifica, la
+      cancellazione, la limitazione del trattamento, la portabilità e l'opposizione,
+      scrivendo a <a href="mailto:{{ site.email }}">{{ site.email }}</a>. Se ritieni che
+      il trattamento avvenga in violazione della normativa, puoi proporre reclamo al
+      Garante per la protezione dei dati personali
+      (<a href="https://www.garanteprivacy.it" target="_blank" rel="noopener noreferrer">garanteprivacy.it</a>)
+      o all'autorità di controllo del tuo Stato di residenza.
+    </p>
+
+    <h2>Minori</h2>
+    <p>
+      Il sito non si rivolge a minori di 14 anni e non raccoglie consapevolmente dati che
+      li riguardino.
+    </p>
+
+    <h2>Modifiche</h2>
+    <p>
+      Questa informativa può essere aggiornata: la data in cima alla pagina indica
+      l'ultima revisione. Per il trattamento dei dati tramite browser vedi anche la
+      <a href="{{ '/cookie-policy/' | url }}">cookie policy</a>.
+    </p>
+  </div>
+</section>

@@ -1,9 +1,12 @@
 <!doctype html>
-<html lang="{{ site.lingua }}">
+<html lang="{{ site.lingua }}" data-tema="scuro">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{{ site.nome }}</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
+  <script src="{{ '/assets/js/tema.js' | url }}"></script>
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <title>{% if titolo %}{{ titolo }} · {% endif %}{{ site.nome }}</title>
   <meta name="description" content="{{ descrizione or site.descrizione }}">
   <meta name="theme-color" content="#101010">
   <link rel="icon" type="image/svg+xml" href="{{ '/assets/favicon.svg' | url }}">
@@ -12,6 +15,7 @@
   <meta property="og:type" content="website">
   <meta property="og:title" content="{{ titolo or site.nome }}">
   <meta property="og:description" content="{{ descrizione or site.descrizione }}">
+  <link rel="canonical" href="{{ site.url }}{{ page.url }}">
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | url }}">
 </head>
 <body>
@@ -69,6 +73,27 @@
           </ul>
         </div>
       </div>
+      <div class="footer-strumenti">
+        <fieldset class="tema">
+          <legend>Tema di lettura</legend>
+          <label class="tema-opzione">
+            <input type="radio" name="tema" value="chiaro" id="tema-chiaro">
+            <span>Chiaro</span>
+          </label>
+          <label class="tema-opzione">
+            <input type="radio" name="tema" value="scuro" id="tema-scuro" checked>
+            <span>Scuro</span>
+          </label>
+          <label class="tema-opzione">
+            <input type="radio" name="tema" value="lettura" id="tema-lettura">
+            <span>Lettura</span>
+          </label>
+        </fieldset>
+        <p class="tema-nota">La scelta resta salvata su questo browser.</p>
+      </div>
+
+      {% include "dati-titolare.njk" %}
+
       <p class="footer-note">
         Gli articoli sono redatti con l'ausilio dell'intelligenza artificiale e
         approvati prima della pubblicazione. Le fonti sono sempre indicate.

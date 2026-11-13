@@ -1,0 +1,87 @@
+{
+  "obiettivoGiornaliero": 4,
+  "maxPerEsecuzione": 2,
+  "finestraNotizieOre": 36,
+  "articoliDaProporre": 40,
+  "paroleMinime": 300,
+  "paroleMassime": 700,
+  "titoliRecentiDaEvitare": 30,
+  "paroleEscluse": [
+    "coupon",
+    "codice sconto",
+    "sconto",
+    "offerta lampo",
+    "offerte del giorno",
+    "migliori offerte",
+    "black friday",
+    "prime day",
+    "cyber monday",
+    "sponsorizzato",
+    "sponsored",
+    "advertorial",
+    "giveaway",
+    "concorso a premi"
+  ],
+  "fonti": [
+    {
+      "nome": "OpenAI News",
+      "url": "https://openai.com/news/rss.xml",
+      "lingua": "en"
+    },
+    {
+      "nome": "Google AI",
+      "url": "https://blog.google/technology/ai/rss/",
+      "lingua": "en"
+    },
+    {
+      "nome": "Google DeepMind",
+      "url": "https://deepmind.google/blog/rss.xml",
+      "lingua": "en"
+    },
+    {
+      "nome": "Hugging Face",
+      "url": "https://huggingface.co/blog/feed.xml",
+      "lingua": "en"
+    },
+    {
+      "nome": "NVIDIA Blog",
+      "url": "https://blogs.nvidia.com/feed/",
+      "lingua": "en"
+    },
+    {
+      "nome": "Apple Newsroom",
+      "url": "https://www.apple.com/newsroom/rss-feed.rss",
+      "lingua": "en"
+    },
+    {
+      "nome": "TechCrunch",
+      "url": "https://techcrunch.com/feed/",
+      "lingua": "en"
+    },
+    {
+      "nome": "The Verge",
+      "url": "https://www.theverge.com/rss/index.xml",
+      "lingua": "en"
+    },
+    {
+      "nome": "Ars Technica",
+      "url": "https://arstechnica.com/feed/",
+      "lingua": "en"
+    },
+    {
+      "nome": "Punto Informatico",
+      "url": "https://www.punto-informatico.it/feed/",
+      "lingua": "it"
+    },
+    {
+      "nome": "Tom's Hardware Italia",
+      "url": "https://www.tomshw.it/feed",
+      "lingua": "it"
+    },
+    {
+      "nome": "Cybersecurity360",
+      "url": "https://www.cybersecurity360.it/feed/",
+      "lingua": "it"
+    }
+  ]
+}

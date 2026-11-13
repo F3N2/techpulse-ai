@@ -36,6 +36,9 @@ jobs:
       - name: Costruisce il sito
         run: npm run build
 
+      - name: Controllo di sicurezza
+        run: npm run sicurezza
+
       - name: Prepara i file per GitHub Pages
         uses: actions/upload-pages-artifact@v3
         with:

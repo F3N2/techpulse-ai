@@ -4,10 +4,18 @@
   "private": true,
   "scripts": {
     "build": "eleventy",
-    "start": "eleventy --serve"
+    "start": "eleventy --serve",
+    "sicurezza": "node scripts/verifica-sicurezza.js",
+    "redazione:bozze": "node scripts/genera-bozze.js",
+    "redazione:approvazioni": "node scripts/gestisci-approvazioni.js"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "devDependencies": {
     "@11ty/eleventy": "^3.0.0",
+    "fast-xml-parser": "^4.5.7",
+    "gray-matter": "^4.0.3",
     "markdown-it": "^14.1.0"
   }
 }

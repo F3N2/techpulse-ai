@@ -1,0 +1,9 @@
+{% if site.titolare == "DA_COMPLETARE" or site.email == "DA_COMPLETARE" %}
+<div class="avviso-dati" role="note">
+  <strong>Da completare.</strong>
+  Questa pagina è pronta nei contenuti, ma mancano i dati del titolare del sito.
+  Compila in <code>src/_data/site.json</code> i campi <code>titolare</code> (nome e
+  cognome, oppure ragione sociale) e <code>email</code>: compariranno automaticamente
+  qui e in tutte le pagine legali.
+</div>
+{% endif %}

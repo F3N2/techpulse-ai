@@ -1,0 +1,58 @@
+name: Redazione AI - genera bozze
+
+on:
+  schedule:
+    # ogni 3 ore: la redazione produce solo quanto manca all'obiettivo giornaliero
+    - cron: "0 */3 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: redazione
+  cancel-in-progress: false
+
+jobs:
+  genera:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Scarica il repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configura Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Installa le dipendenze
+        run: npm install --no-audit --no-fund
+
+      - name: Genera le bozze e avvisa su Telegram
+        env:
+          AI_API_KEY: ${{ secrets.AI_API_KEY }}
+          AI_BASE_URL: ${{ vars.AI_BASE_URL }}
+          AI_MODEL: ${{ vars.AI_MODEL }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          SITO_URL: ${{ vars.SITO_URL }}
+        run: node scripts/genera-bozze.js
+
+      - name: Controllo di sicurezza
+        run: npm run sicurezza
+
+      - name: Salva bozze e archivio
+        run: |
+          git config user.name "TECHPULSE AI - redazione"
+          git config user.email "redazione@users.noreply.github.com"
+          git add _redazione
+          if git diff --cached --quiet; then
+            echo "Nessuna modifica da salvare."
+            exit 0
+          fi
+          git commit -m "redazione: bozze in attesa di approvazione"
+          git pull --rebase origin "${GITHUB_REF_NAME}"
+          git push

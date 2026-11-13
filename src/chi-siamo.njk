@@ -1,0 +1,62 @@
+---
+layout: base.njk
+titolo: "Chi siamo"
+descrizione: "TECHPULSE AI è un magazine italiano su intelligenza artificiale, tecnologia, startup, innovazione e robotica: come lavora la redazione e come vengono verificati i contenuti."
+---
+<section class="container">
+  <div class="page-head">
+    <h1>Chi siamo</h1>
+    <p>
+      TECHPULSE AI è un magazine online italiano dedicato a intelligenza artificiale,
+      tecnologia, startup, innovazione e robotica.
+    </p>
+  </div>
+
+  <div class="prose">
+    {% include "avviso-dati.njk" %}
+
+    <h2>Il progetto</h2>
+    <p>
+      TECHPULSE AI seleziona ogni giorno le notizie tecnologiche più rilevanti per il
+      pubblico italiano e le racconta in modo chiaro, indicando sempre le fonti
+      consultate. Il sito è curato da {{ site.titolare }}.
+    </p>
+
+    <h2>Come lavoriamo</h2>
+    <p>
+      Le notizie arrivano da feed pubblici di testate giornalistiche e di blog ufficiali
+      di aziende e centri di ricerca. Una parte del lavoro di selezione e di scrittura
+      avviene con l'ausilio dell'intelligenza artificiale; ogni articolo viene poi letto,
+      verificato e approvato da una persona prima della pubblicazione. Nessun contenuto
+      viene pubblicato in modo automatico e senza revisione.
+    </p>
+    <p>
+      Non riscriviamo articoli altrui: partiamo dalle informazioni pubblicate dalla fonte
+      e produciamo un testo originale, con un rimando alla notizia originale. Quando un
+      dato non è confermato lo segnaliamo nella nota di verifica che accompagna
+      l'articolo.
+    </p>
+
+    <h2>Uso dell'intelligenza artificiale</h2>
+    <p>
+      Ogni articolo riporta in calce una dichiarazione sull'uso dell'AI e un link
+      all'<a href="{{ '/informativa-ai/' | url }}">informativa dedicata</a>, che spiega
+      nel dettaglio come vengono usati questi strumenti e quali sono i limiti.
+    </p>
+
+    <h2>Correzioni e diritto di replica</h2>
+    <p>
+      Se un articolo contiene un errore, o se sei il titolare di una fonte citata e
+      ritieni che un contenuto vada corretto, scrivi a
+      <a href="mailto:{{ site.email }}">{{ site.email }}</a>. Le richieste di correzione
+      vengono esaminate e, quando fondate, l'articolo viene aggiornato indicando la
+      modifica.
+    </p>
+
+    <h2>Contatti</h2>
+    <p>
+      Per informazioni, segnalazioni e collaborazioni:
+      <a href="{{ '/contatti/' | url }}">pagina contatti</a>.
+    </p>
+  </div>
+</section>
