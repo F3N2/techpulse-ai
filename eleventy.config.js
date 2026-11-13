@@ -146,6 +146,17 @@ module.exports = function (eleventyConfig) {
       .slice(0, 8)
   );
 
+  // Zona tool: ogni cartella in src/tool/ diventa un quadrato, e il nome della
+  // cartella è il titolo del quadrato. Dentro c'è una pagina index.html.
+  eleventyConfig.addCollection("tool", (collectionApi) =>
+    collectionApi.getFilteredByGlob("src/tool/*/index.html")
+  );
+
+  eleventyConfig.addFilter("nomeCartella", (stem) => {
+    const parti = String(stem || "").split("/").filter(Boolean);
+    return parti.length >= 3 ? parti[parti.length - 2] : "";
+  });
+
   eleventyConfig.addFilter("perCategoria", (lista, nomeCategoria) =>
     (lista || []).filter(
       (articolo) => articolo.data.categoria === nomeCategoria

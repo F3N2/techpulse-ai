@@ -493,111 +493,70 @@ html[data-tema="lettura"] .site-header {
 .stato-vuoto p { color: var(--testo-2); max-width: 54ch; margin-inline: auto; }
 .stato-vuoto .btn { margin-top: 0.9rem; }
 
-/* ---------- 9. Tabella dei tool ---------- */
-.tabella-scroll {
+/* ---------- 9. Quadrati dei tool ---------- */
+.quadrati {
+  display: grid;
+  gap: 1.1rem;
+  grid-template-columns: repeat(auto-fill, 220px);
+  justify-content: start;
+}
+.quadrato {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  aspect-ratio: 1 / 1;
+  padding: 1.3rem;
+  background: var(--fondo-2);
   border: 1px solid var(--bordo);
   border-radius: var(--raggio);
-  background: var(--fondo-2);
-  overflow-x: auto;
-  box-shadow: var(--ombra);
-}
-.tabella-tool {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 0.95rem;
-}
-.tabella-didascalia {
-  caption-side: top;
-  text-align: left;
-  padding: 1rem 1.15rem 0.35rem;
-  color: var(--testo-3);
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-}
-.tabella-tool thead th {
-  text-align: left;
-  padding: 0.85rem 1.15rem;
-  border-bottom: 1px solid var(--bordo);
-  color: var(--testo-3);
-  font-size: 0.66rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  white-space: nowrap;
-}
-.tabella-tool tbody th,
-.tabella-tool tbody td {
-  padding: 1rem 1.15rem;
-  border-bottom: 1px solid var(--bordo);
-  text-align: left;
-  vertical-align: top;
-  font-weight: 400;
-}
-.tabella-tool tbody tr:last-child th,
-.tabella-tool tbody tr:last-child td { border-bottom: 0; }
-.tabella-tool tbody tr { transition: background-color 0.15s ease; }
-.tabella-tool tbody tr:hover { background: var(--accento-velo); }
-
-.tool-nome {
-  font-family: var(--font-ui);
-  font-weight: 700;
-  font-size: 1rem;
   color: var(--testo);
-  border-bottom: 1px solid var(--bordo-forte);
+  transition: border-color 0.18s ease, background-color 0.18s ease,
+    transform 0.18s ease, box-shadow 0.18s ease;
 }
-.tool-nome:hover { color: var(--accento); border-color: var(--accento); }
-.tool-descrizione { color: var(--testo-2); max-width: 46ch; }
-.tool-costo {
-  color: var(--testo-2);
-  white-space: nowrap;
-  font-size: 0.86rem;
+.quadrato:hover {
+  color: var(--testo);
+  border-color: var(--accento-bordo);
+  background: var(--fondo-3);
+  transform: translateY(-3px);
+  box-shadow: var(--ombra-alta);
 }
-
-.tag {
-  display: inline-block;
-  padding: 0.2rem 0.6rem;
-  border: 1px solid var(--accento-bordo);
-  border-radius: 999px;
-  background: var(--accento-velo);
-  color: var(--accento);
-  font-size: 0.68rem;
+.quadrato h2 {
+  margin: 0;
+  padding-bottom: 0.65rem;
+  border-bottom: 1px solid var(--bordo);
+  font-family: var(--font-display);
   font-weight: 700;
-  letter-spacing: 0.08em;
+  font-size: 1.32rem;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  overflow-wrap: anywhere;
+}
+.quadrato p {
+  margin: 0;
+  color: var(--testo-2);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.quadrato-freccia {
+  margin-top: auto;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  white-space: nowrap;
+  color: var(--accento);
 }
-
-.tool-nota {
-  margin-top: 1.2rem;
-  color: var(--testo-3);
-  font-size: 0.85rem;
-  max-width: 62ch;
+html[data-tema="lettura"] .quadrato h2 { font-family: var(--font-citazione); }
+html[data-tema="lettura"] .quadrato:hover { box-shadow: none; }
+@media (max-width: 560px) {
+  .quadrati { grid-template-columns: 1fr; }
+  .quadrato { aspect-ratio: auto; min-height: 180px; }
 }
-
-/* Su schermo stretto ogni riga diventa una scheda */
-@media (max-width: 760px) {
-  .tabella-scroll {
-    border: 0; background: none; box-shadow: none; overflow: visible;
-  }
-  .tabella-tool tbody, .tabella-tool tbody tr,
-  .tabella-tool tbody th, .tabella-tool tbody td { display: block; }
-  .tabella-tool thead { display: none; }
-  .tabella-didascalia { padding: 0 0 0.8rem; }
-  .tabella-tool tbody tr {
-    border: 1px solid var(--bordo);
-    border-radius: var(--raggio-piccolo);
-    background: var(--fondo-2);
-    padding: 1rem 1.1rem;
-    margin-bottom: 0.85rem;
-  }
-  .tabella-tool tbody th,
-  .tabella-tool tbody td { border: 0; padding: 0; }
-  .tabella-tool tbody th { margin-bottom: 0.45rem; }
-  .tool-descrizione { max-width: none; font-size: 0.95rem; }
-  .tag { margin-top: 0.75rem; }
-  .tool-costo { margin-top: 0.55rem; }
+@media (prefers-reduced-motion: reduce) {
+  .quadrato:hover { transform: none; }
 }
 
 /* ---------- 10. Testo lungo ---------- */
@@ -843,8 +802,7 @@ html[data-tema="lettura"] .site-header {
 
 /* ---------- 15. Tema lettura: meno distrazioni ---------- */
 html[data-tema="lettura"] .card { background: var(--fondo); box-shadow: none; }
-html[data-tema="lettura"] .tabella-scroll { box-shadow: none; }
-html[data-tema="lettura"] .tabella-tool tbody tr:hover { background: var(--fondo-2); }
+
 html[data-tema="lettura"] .card:hover { background: var(--fondo-2); }
 html[data-tema="lettura"] .lead { box-shadow: none; }
 html[data-tema="lettura"] .section-head { margin-top: 2.6rem; }

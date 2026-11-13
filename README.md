@@ -127,8 +127,9 @@ Con la chiave configurata puoi scrivere in chat:
 /tool devo riassumere un PDF di 60 pagine
 ```
 
-Il bot interroga l'API con in contesto la tabella della pagina Tool e risponde con lo
-strumento più adatto e i passi per usarlo. La chiave è cifrata in
+Il bot interroga l'API con in contesto l'elenco dei tool del sito (le cartelle dentro
+`src/tool/`, con titolo, descrizione e link esterno) e risponde con lo strumento più
+adatto e i passi per usarlo. La chiave è cifrata in
 `_redazione/api-tool.enc` con la chiave derivata dal token del bot; in alternativa puoi
 usare i secret GitHub `TOOL_API_KEY`, `TOOL_API_BASE` e `TOOL_API_MODEL`, che hanno la
 precedenza.
@@ -204,22 +205,33 @@ articoli con `approvato` diverso da `true`, titoli mancanti e categorie mancanti
 
 ## Zona tool
 
-La tabella in `/tool/` si modifica da un solo file, `src/_data/tools.json`: ogni voce ha
-`nome`, `categoria`, `descrizione`, `url` e `costo`.
+Ogni tool è una **cartella dentro `src/tool/`**: il nome della cartella diventa il titolo
+del quadrato nella pagina `/tool/`, e dentro c'è una pagina HTML con il contenuto dello
+strumento.
 
-```json
-{
-  "nome": "ChatGPT",
-  "categoria": "Assistenti",
-  "descrizione": "L'assistente più diffuso: scrive, riassume, traduce.",
-  "url": "https://chatgpt.com",
-  "costo": "Freemium"
-}
+```
+src/tool/
+  Il-mio-tool/
+    index.html      ← si pubblica su /tool/Il-mio-tool/
 ```
 
-Aggiungi la riga e fai commit: la pagina si rigenera da sola, con il conteggio aggiornato.
-Gli stessi dati vengono passati all'API dei tool quando scrivi `/tool` su Telegram, così
-il bot consiglia solo strumenti che esistono davvero in tabella.
+`index.html` è un normale file Eleventy con front matter:
+
+```html
+---
+layout: base.njk
+descrizione: "La riga che compare nel quadrato."
+sito: "https://esempio.it"
+---
+<section class="container prose">
+  <h1>Il mio tool</h1>
+  <p>Codice e istruzioni d'uso.</p>
+</section>
+```
+
+`descrizione` riempie il quadrato, `sito` è il link esterno che il bot può citare quando
+scrivi `/tool` su Telegram. Non serve toccare template, collezioni o CSS: la pagina si
+rigenera da sola, e senza nessuna cartella mostra lo stato vuoto.
 
 ## Struttura
 
@@ -234,8 +246,10 @@ scripts/
   gestisci-approvazioni.js  clic ✅/❌ → pubblicazione
   lib/                      util, config, notizie (RSS), ai, apiTool, articoli, telegram
 src/                        sito Eleventy (pagine, layout, dati, articoli)
-  tool.njk                  pagina dei tool
-  _data/tools.json          elenco dei tool: una riga per strumento
+  tool/                     un quadrato per cartella
+    index.njk               pagina che elenca i quadrati
+    <Nome-tool>/
+      index.html            contenuto dello strumento
 .github/workflows/
   deploy.yml                pubblica il sito a ogni push su main
   redazione-genera.yml      cron ogni 3 ore

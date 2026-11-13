@@ -13,7 +13,7 @@ const PERCORSI = {
   config: path.join(RADICE, "_redazione", "config.json"),
   articoli: path.join(RADICE, "src", "articoli"),
   categorie: path.join(RADICE, "src", "_data", "categorie.json"),
-  tools: path.join(RADICE, "src", "_data", "tools.json"),
+  tool: path.join(RADICE, "src", "tool"),
 };
 
 module.exports = { RADICE, PERCORSI };

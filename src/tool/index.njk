@@ -1,0 +1,42 @@
+---
+layout: base.njk
+titolo: "Tool"
+descrizione: "I tool di NEXORA: un quadrato per strumento, con la descrizione e la pagina di dettaglio."
+---
+
+{% set strumenti = collections.tool %}
+
+<section class="container">
+  <div class="page-head">
+    <p class="kicker">Un quadrato per strumento</p>
+    <h1>I <em>tool</em>.</h1>
+    <p>
+      Qui raccolgo gli strumenti che uso e che consiglio. Ognuno ha il suo quadrato:
+      dentro c'è una pagina con il codice e le istruzioni d'uso.
+    </p>
+  </div>
+
+  {% if strumenti.length %}
+  <div class="quadrati">
+    {% for t in strumenti %}
+    {% set nome = t.page.filePathStem | nomeCartella %}
+    <a class="quadrato" href="{{ t.url | url }}">
+      <h2>{{ nome }}</h2>
+      {% if t.data.descrizione %}
+      <p>{{ t.data.descrizione }}</p>
+      {% endif %}
+      <span class="quadrato-freccia">Apri →</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="stato-vuoto">
+    <h2>Nessun tool, per ora</h2>
+    <p>
+      Questa pagina si costruisce da sola: ogni cartella dentro <code>src/tool/</code>
+      diventa un quadrato e il nome della cartella è il titolo. Dentro va una pagina
+      <code>index.html</code> con il contenuto dello strumento.
+    </p>
+  </div>
+  {% endif %}
+</section>

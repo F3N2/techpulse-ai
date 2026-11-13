@@ -6,7 +6,7 @@
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; upgrade-insecure-requests">
   <script src="{{ '/assets/js/tema.js' | url }}?v={{ '/assets/js/tema.js' | impronta }}"></script>
   <meta name="referrer" content="strict-origin-when-cross-origin">
-  <title>{% if titolo %}{{ titolo }} · {% endif %}{{ site.nome }}</title>
+  <title>{% if titolo %}{{ titolo }} · {% elif page.filePathStem | nomeCartella %}{{ page.filePathStem | nomeCartella }} · {% endif %}{{ site.nome }}</title>
   <meta name="description" content="{{ descrizione or site.descrizione }}">
   <meta name="theme-color" content="#101010">
   <link rel="icon" type="image/svg+xml" href="{{ '/assets/favicon.svg' | url }}">

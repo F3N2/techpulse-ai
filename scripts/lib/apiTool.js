@@ -1,7 +1,8 @@
 const fs = require("fs");
+const path = require("path");
+const matter = require("gray-matter");
 
-const { PERCORSI } = require("./percorsi");
-const { leggiJson } = require("./config");
+const { RADICE, PERCORSI } = require("./percorsi");
 const { cifra, decifra } = require("./credenziali");
 
 /** Endpoint compatibile OpenAI usato per far girare i tool. */
@@ -135,12 +136,43 @@ async function chiamaChat(api, corpo) {
 }
 
 /**
- * Fa ragionare l'API configurata sulla tabella dei tool del sito:
+ * Elenco dei tool pubblicati: ogni cartella in src/tool/ è un quadrato, il nome
+ * della cartella è il titolo e il front matter della pagina ne dà descrizione e URL.
+ */
+function elencoTool() {
+  if (!fs.existsSync(PERCORSI.tool)) return [];
+
+  return fs
+    .readdirSync(PERCORSI.tool, { withFileTypes: true })
+    .filter((voce) => voce.isDirectory())
+    .map((voce) => {
+      const file = path.join(PERCORSI.tool, voce.name, "index.html");
+      let dati = {};
+
+      try {
+        if (fs.existsSync(file)) {
+          dati = matter(fs.readFileSync(file, "utf8")).data || {};
+        }
+      } catch {
+        dati = {};
+      }
+
+      return {
+        nome: voce.name,
+        descrizione: String(dati.descrizione || ""),
+        url: String(dati.sito || ""),
+      };
+    })
+    .sort((a, b) => a.nome.localeCompare(b.nome, "it"));
+}
+
+/**
+ * Fa ragionare l'API configurata sui tool del sito:
  * riceve una richiesta in italiano e indica quale strumento usare.
  */
 async function eseguiTool({ richiesta, configurazione, maxTokens = 700 }) {
   const api = configurazione || configApiTool();
-  const tools = leggiJson(PERCORSI.tools, []);
+  const tools = elencoTool();
 
   const elenco = (Array.isArray(tools) ? tools : [])
     .map(
@@ -193,6 +225,7 @@ async function verificaApiTool(configurazione) {
 module.exports = {
   BASE_PREDEFINITA,
   MODELLO_PREDEFINITO,
+  elencoTool,
   leggiApiTool,
   salvaApiTool,
   eliminaApiTool,

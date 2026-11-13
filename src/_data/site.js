@@ -8,7 +8,7 @@ module.exports = {
   nome: "NEXORA",
   slogan: "Il magazine italiano che spiega l'intelligenza artificiale",
   descrizione:
-    "NEXORA è il magazine italiano che spiega l'intelligenza artificiale, la tecnologia e le startup senza rumore: notizie selezionate, fonti sempre indicate, una tabella di strumenti utili scelti dalla redazione.",
+    "NEXORA è il magazine italiano che spiega l'intelligenza artificiale, la tecnologia senza rumore: notizie selezionate, fonti sempre indicate, una raccolta di strumenti utili scelti dalla redazione.",
   lingua: "it",
   url: `https://${proprietario.toLowerCase()}.github.io/${nomeRepository}`,
   email: "DA_COMPLETARE",
